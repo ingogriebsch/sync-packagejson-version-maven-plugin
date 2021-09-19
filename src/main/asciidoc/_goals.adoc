@@ -19,6 +19,12 @@ This plugin has the following goals:
 
 Checks if the package.json files located in the project have the same version as the version defined in the pom.xml of the project.
 
+=== Attributes
+
+*   Requires a {apache-maven-url}[Maven] project to be executed.
+*   Binds by default to the lifecycle phase `verify`.
+*   The goal is thread-safe and supports parallel builds.
+
 === Parameters
 
 Parameter prefix is `sync-packagejson-version.check.`
@@ -67,6 +73,10 @@ Parameter prefix is `sync-packagejson-version.check.`
 == help
 
 Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
+
+=== Attributes
+
+*   The goal is thread-safe and supports parallel builds.
 
 === Parameters
 
