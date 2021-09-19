@@ -1,0 +1,40 @@
+# This workflow builds the project with Maven
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+name: build
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code base
+        # https://github.com/actions/checkout
+        uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 8
+        # https://github.com/actions/setup-java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 8
+          distribution: 'adopt'
+          check-latest: true
+
+      - name: Prepare Maven cache
+        # https://github.com/actions/cache
+        uses: actions/cache@v2.1.6
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: Prepare Sonar cache
+        # https://github.com/actions/cache
+        uses: actions/cache@v2.1.6
+        with:
+          path: ~/.sonar/cache
+          key: sonar
+
+      - name: Verify artifacts
+        run: mvn -B -Pintegration-tests verify

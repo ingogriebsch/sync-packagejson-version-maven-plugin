@@ -1,0 +1,57 @@
+[[usage]]
+= Usage
+
+To use this plugin, include the appropriate XML in the plugins section of your pom.xml, as shown in the following example:
+[source,xml,indent=0,subs="verbatim,quotes,attributes"]
+----
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>some-artifact</artifactId>
+    <!-- ... -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>de.ingogriebsch.maven</groupId>
+                <artifactId>sync-packagejson-version-maven-plugin</artifactId>
+                <version>{project-version}</version>
+                <executions>
+                    <execution>
+                        <id>check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+----
+
+If you use a snapshot release, you also need to add the appropriate pluginRepository elements, as shown in the following listing:
+[source,xml,indent=0,subs="verbatim,quotes,attributes"]
+----
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>some-artifact</artifactId>
+    <!-- ... -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>sonatype-snapshot-repository</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+</project>
+----
+
+The plugin offers a number of user properties, starting with `sync-packagejson-version.<goal>.-`, to let you customize the configuration from the command-line. For instance, you could disable the build from failing even though no package.json file is found as follows:
+[source,bash,indent=0,subs="verbatim,quotes,attributes"]
+----
+$ mvn verify -Dsync-packagejson-version.check.failIfNoneFound=false
+----

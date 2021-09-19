@@ -1,0 +1,104 @@
+[[goals]]
+= Goals
+
+This plugin has the following goals:
+
+[frame=none,stripes=even,cols="1,2"]
+|===
+|Goal |Description
+
+|sync-packagejson-version:help
+|Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
+
+|sync-packagejson-version:check
+|Checks if the package.json files located in the project have the same version as the version defined in the pom.xml of the project.
+|===
+
+== sync-packagejson-version:help
+
+Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
+
+=== Parameters
+
+Parameter prefix is `sync-packagejson-version.help.`
+
+[frame=none,stripes=even,cols="1,1,2,1,1,1"]
+|===
+|Name |Type |Description |Mandatory |Default |User property
+
+|detail
+|Boolean
+|If true, display all settable properties for each goal.
+|false
+|false
+|detail
+
+|goal
+|String
+|The name of the goal for which to show help. If unspecified, all goals will be displayed.
+|false
+|
+|goal
+
+|indentSize
+|Number
+|The number of spaces per indentation level, should be positive.
+|false
+|2
+|indentSize
+
+|lineLength
+|Number
+|The maximum length of a display line, should be positive.
+|false
+|80
+|lineLength
+|===
+
+== sync-packagejson-version:check
+
+Checks if the package.json files located in the project have the same version as the version defined in the pom.xml of the project.
+
+=== Parameters
+
+Parameter prefix is `sync-packagejson-version.check.`
+
+[frame=none,stripes=even,cols="1,1,2,1,1,1"]
+|===
+|Name |Type |Description |Mandatory |Default |User property
+
+|skip
+|Boolean
+|Flag to control if the execution of the goal should be skipped.
+|false
+|false
+|skip
+
+|skipCheck
+|Boolean
+|Flag to control if the execution of the goal should be skipped. This parameter acts as an alias for parameter `skip`.
+|false
+|false
+|skipCheck
+
+|failIfNoneFound
+|Boolean
+|Flag to control if the execution of the goal should fail if no package.json is found.
+|false
+|true
+|failIfNoneFound
+
+|includes
+|String[]
+|List of files to include. Specified as file-set patterns which are relative to the projects root directory.
+|false
+|package.json
+|includes
+
+|excludes
+|String[]
+|List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
+|false
+|
+|excludes
+|===

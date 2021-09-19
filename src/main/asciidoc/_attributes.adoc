@@ -1,0 +1,15 @@
+:docinfo: shared
+:doctype: book
+:hide-uri-scheme:
+:icons: font
+:idprefix:
+:idseparator: -
+:sectanchors:
+:sectlinks:
+:sectnums:
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+
+:apache-maven-url: https://maven.apache.org/
+:apache2-license-url: https://www.apache.org/licenses/LICENSE-2.0.html

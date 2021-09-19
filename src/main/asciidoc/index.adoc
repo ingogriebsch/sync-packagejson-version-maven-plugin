@@ -1,0 +1,14 @@
+[[sync-packagejson-version-maven-plugin-documentation]]
+= 'Sync package.json version' Maven plugin Documentation
+Ingo Griebsch
+:revnumber: {project-version}
+:revdate: {localdate}
+include::_attributes.adoc[]
+
+{project-description}
+
+include::_legal.adoc[leveloffset=+1]
+include::_introduction.adoc[leveloffset=+1]
+include::_usage.adoc[leveloffset=+1]
+include::_goals.adoc[leveloffset=+1]
+include::_license.adoc[leveloffset=+1]
