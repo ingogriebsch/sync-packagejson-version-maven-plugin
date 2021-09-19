@@ -1,0 +1,6 @@
+[[integration]]
+= Integration
+
+== Eclipse
+
+This plugin contains support for M2E, including lifecycle mappings and support for incremental builds in Eclipse. The <<goals:check,check>> goal support incremental builds to avoid doing unnecessary work.
