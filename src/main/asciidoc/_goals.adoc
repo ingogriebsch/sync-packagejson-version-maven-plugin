@@ -7,14 +7,15 @@ This plugin has the following goals:
 |===
 |Goal |Description
 
-|sync-packagejson-version:help
+|<<goals:help,sync-packagejson-version:help>>
 |Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
 
-|sync-packagejson-version:check
+|<<goals:check,sync-packagejson-version:check>>
 |Checks if the package.json files located in the project have the same version as the version defined in the pom.xml of the project.
 |===
 
-== sync-packagejson-version:help
+[[goals:help]]
+== help
 
 Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
 
@@ -55,7 +56,8 @@ Parameter prefix is `sync-packagejson-version.help.`
 |lineLength
 |===
 
-== sync-packagejson-version:check
+[[goals:check]]
+== check
 
 Checks if the package.json files located in the project have the same version as the version defined in the pom.xml of the project.
 
