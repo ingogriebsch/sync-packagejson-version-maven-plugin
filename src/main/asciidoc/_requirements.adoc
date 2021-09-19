@@ -1,0 +1,19 @@
+[[requirements]]
+= Requirements
+
+The following specifies the minimum requirements to run this Maven plugin:
+
+[frame=none,stripes=even,cols="1,2"]
+|===
+|Maven
+|{maven-version}
+
+|JDK
+|{java-version}
+
+|Memory
+|Depends on your project.
+
+|Disk Space
+|No minimum requirement.
+|===

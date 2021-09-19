@@ -9,6 +9,7 @@ include::_attributes.adoc[]
 
 include::_legal.adoc[leveloffset=+1]
 include::_introduction.adoc[leveloffset=+1]
+include::_requirements.adoc[leveloffset=+1]
 include::_usage.adoc[leveloffset=+1]
 include::_goals.adoc[leveloffset=+1]
 include::_license.adoc[leveloffset=+1]
