@@ -368,7 +368,7 @@
                 <configuration>
                     <breakiterator>true</breakiterator>
                     <quiet>true</quiet>
-                    <show>public</show>
+                    <show>package</show>
                 </configuration>
             </plugin>
             <plugin><!-- https://maven.apache.org/plugins/maven-source-plugin/ -->
