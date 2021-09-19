@@ -7,53 +7,11 @@ This plugin has the following goals:
 |===
 |Goal |Description
 
-|<<goals:help,sync-packagejson-version:help>>
-|Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
-
 |<<goals:check,sync-packagejson-version:check>>
 |Checks if the package.json files located in the project have the same version as the version defined in the pom.xml of the project.
-|===
 
-[[goals:help]]
-== help
-
-Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
-
-=== Parameters
-
-Parameter prefix is `sync-packagejson-version.help.`
-
-[frame=none,stripes=even,cols="1,1,2,1,1,1"]
-|===
-|Name |Type |Description |Mandatory |Default |User property
-
-|detail
-|Boolean
-|If true, display all settable properties for each goal.
-|false
-|false
-|detail
-
-|goal
-|String
-|The name of the goal for which to show help. If unspecified, all goals will be displayed.
-|false
-|
-|goal
-
-|indentSize
-|Number
-|The number of spaces per indentation level, should be positive.
-|false
-|2
-|indentSize
-
-|lineLength
-|Number
-|The maximum length of a display line, should be positive.
-|false
-|80
-|lineLength
+|<<goals:help,sync-packagejson-version:help>>
+|Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
 |===
 
 [[goals:check]]
@@ -103,4 +61,46 @@ Parameter prefix is `sync-packagejson-version.check.`
 |false
 |
 |excludes
+|===
+
+[[goals:help]]
+== help
+
+Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
+
+=== Parameters
+
+Parameter prefix is `sync-packagejson-version.help.`
+
+[frame=none,stripes=even,cols="1,1,2,1,1,1"]
+|===
+|Name |Type |Description |Mandatory |Default |User property
+
+|detail
+|Boolean
+|If true, display all settable properties for each goal.
+|false
+|false
+|detail
+
+|goal
+|String
+|The name of the goal for which to show help. If unspecified, all goals will be displayed.
+|false
+|
+|goal
+
+|indentSize
+|Number
+|The number of spaces per indentation level, should be positive.
+|false
+|2
+|indentSize
+
+|lineLength
+|Number
+|The maximum length of a display line, should be positive.
+|false
+|80
+|lineLength
 |===
