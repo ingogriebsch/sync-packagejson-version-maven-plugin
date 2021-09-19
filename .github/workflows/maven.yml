@@ -38,3 +38,10 @@ jobs:
 
       - name: Verify artifacts
         run: mvn -B -Pintegration-tests verify
+
+      - name: Upload coverage report to SonarCloud
+        if: github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
