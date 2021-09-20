@@ -37,7 +37,7 @@ class VersionValidator {
 
     private static final ObjectMapper objectMapper = objectMapper();
 
-    private final File file;
+    File file;
 
     /**
      * Checks if the version of the given <code>package.json</code> like file is valid (means is the same as the given version).
