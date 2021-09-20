@@ -125,14 +125,6 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
     }
 
     /**
-     * @see AbstractMojo#validate()
-     */
-    @Override
-    protected void validate() throws Exception {
-        CheckPropertiesValidator.of(this).validate();
-    }
-
-    /**
      * @see AbstractMojo#doExecute()
      */
     @Override
