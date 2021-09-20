@@ -40,7 +40,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  * @since 1.0.0
  */
 @Mojo(name = "check", defaultPhase = VERIFY, requiresProject = true, threadSafe = true)
-class CheckMojo extends AbstractMojo implements CheckProperties {
+class CheckMojo extends AbstractMojo {
 
     private static final String PROPERTY_PREFIX = "sync-packagejson-version.check.";
 
@@ -83,38 +83,6 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
      */
     @Parameter(property = PROPERTY_PREFIX + "excludes")
     private String[] excludes;
-
-    /**
-     * @see CheckProperties#getEncoding()
-     */
-    @Override
-    public String getEncoding() {
-        return encoding;
-    }
-
-    /**
-     * @see CheckProperties#getIncludes()
-     */
-    @Override
-    public String[] getIncludes() {
-        return includes;
-    }
-
-    /**
-     * @see CheckProperties#getExcludes()
-     */
-    @Override
-    public String[] getExcludes() {
-        return excludes;
-    }
-
-    /**
-     * @see CheckProperties#isFailIfNoneFound()
-     */
-    @Override
-    public boolean isFailIfNoneFound() {
-        return failIfNoneFound;
-    }
 
     /**
      * @see AbstractMojo#isSkipped()
