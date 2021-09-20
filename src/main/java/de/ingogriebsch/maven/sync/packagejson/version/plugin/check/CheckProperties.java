@@ -23,6 +23,14 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
 interface CheckProperties {
 
     /**
+     * Declares the encoding in which the files are interpreted while executing this mojo.
+     * 
+     * @return the encoding
+     * @since 1.0.0
+     */
+    String getEncoding();
+
+    /**
      * Declares the files which should be included in the check.
      * 
      * @return the list of files to include

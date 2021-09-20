@@ -15,6 +15,8 @@
  */
 package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 import org.junit.jupiter.api.Test;
@@ -23,25 +25,33 @@ class CheckPropertiesValidatorTest {
 
     @Test
     void should_succeed_if_includes_is_not_given() {
-        CheckPropertiesValidator validator = CheckPropertiesValidator.of(checkProperties(null, new String[] { "*.*" }, true));
+        CheckPropertiesValidator validator =
+            CheckPropertiesValidator.of(checkProperties(UTF_8.toString(), null, new String[] { "*.*" }, true));
         assertThatNoException().isThrownBy(() -> validator.validate());
     }
 
     @Test
     void should_succeed_if_excludes_is_not_given() {
-        CheckPropertiesValidator validator = CheckPropertiesValidator.of(checkProperties(new String[] { "*.*" }, null, true));
+        CheckPropertiesValidator validator =
+            CheckPropertiesValidator.of(checkProperties(UTF_8.toString(), new String[] { "*.*" }, null, true));
         assertThatNoException().isThrownBy(() -> validator.validate());
     }
 
     @Test
     void should_succeed_if_all_properties_are_valid() {
         CheckPropertiesValidator validator =
-            CheckPropertiesValidator.of(checkProperties(new String[] { "*.*" }, new String[] { "*.*" }, true));
+            CheckPropertiesValidator.of(checkProperties(UTF_8.toString(), new String[] { "*.*" }, new String[] { "*.*" }, true));
         assertThatNoException().isThrownBy(() -> validator.validate());
     }
 
-    private static CheckProperties checkProperties(String[] includes, String[] excludes, boolean failIfNoneFound) {
+    private static CheckProperties checkProperties(String encoding, String[] includes, String[] excludes,
+        boolean failIfNoneFound) {
         return new CheckProperties() {
+
+            @Override
+            public String getEncoding() {
+                return encoding;
+            }
 
             @Override
             public String[] getIncludes() {

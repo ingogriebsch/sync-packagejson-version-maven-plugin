@@ -37,7 +37,7 @@ class VersionValidatorTest {
         File packageJson = new File(tempDir, "package.json");
         writeStringToFile(packageJson, "{\"version\": \"" + version + "\"}", UTF_8);
 
-        VersionValidator validator = VersionValidator.of(packageJson);
+        VersionValidator validator = VersionValidator.of(packageJson, UTF_8.toString());
         assertThat(validator.validate(version)).isEmpty();
     }
 
@@ -48,7 +48,7 @@ class VersionValidatorTest {
         String packageJsonVersion = "1.2.4-SNAPSHOT";
         writeStringToFile(packageJson, "{\"version\": \"" + packageJsonVersion + "\"}", UTF_8);
 
-        VersionValidator validator = VersionValidator.of(packageJson);
+        VersionValidator validator = VersionValidator.of(packageJson, UTF_8.toString());
         assertThat(validator.validate(pomVersion)) //
             .get() //
             .hasFieldOrPropertyWithValue("packageJson", packageJson) //
@@ -61,7 +61,7 @@ class VersionValidatorTest {
         File packageJson = new File(tempDir, "package.json");
         writeStringToFile(packageJson, "some content", UTF_8);
 
-        VersionValidator validator = VersionValidator.of(packageJson);
+        VersionValidator validator = VersionValidator.of(packageJson, UTF_8.toString());
         assertThatThrownBy(() -> validator.validate("1.2.3-SNAPSHOT")).isInstanceOf(IOException.class);
     }
 

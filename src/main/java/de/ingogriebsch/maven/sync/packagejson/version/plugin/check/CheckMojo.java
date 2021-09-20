@@ -61,6 +61,14 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
     private boolean failIfNoneFound = true;
 
     /**
+     * The encoding in which the files are interpreted while executing this mojo.
+     * 
+     * @since 1.0.0
+     */
+    @Parameter(property = PROPERTY_PREFIX + "encoding", defaultValue = "${project.build.sourceEncoding}")
+    private String encoding;
+
+    /**
      * List of files to include. Specified as file-set patterns which are relative to the projects root directory.
      * 
      * @since 1.0.0
@@ -77,11 +85,11 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
     private String[] excludes;
 
     /**
-     * @see CheckProperties#isFailIfNoneFound()
+     * @see CheckProperties#getEncoding()
      */
     @Override
-    public boolean isFailIfNoneFound() {
-        return failIfNoneFound;
+    public String getEncoding() {
+        return encoding;
     }
 
     /**
@@ -98,6 +106,14 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
     @Override
     public String[] getExcludes() {
         return excludes;
+    }
+
+    /**
+     * @see CheckProperties#isFailIfNoneFound()
+     */
+    @Override
+    public boolean isFailIfNoneFound() {
+        return failIfNoneFound;
     }
 
     /**
@@ -141,7 +157,7 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
         String version = project.getVersion();
         List<ConstraintViolation> violations = packageJsons //
             .stream() //
-            .map(pj -> validate(pj, version)) //
+            .map(pj -> validate(version, pj, encoding)) //
             .filter(Optional::isPresent) //
             .map(Optional::get) //
             .collect(toList());
@@ -163,8 +179,8 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
         violations.forEach(v -> logger.error(v.toString()));
     }
 
-    private static Optional<ConstraintViolation> validate(File packageJson, String version) {
-        return VersionValidator.of(packageJson).validate(version);
+    private static Optional<ConstraintViolation> validate(String version, File packageJson, String encoding) {
+        return VersionValidator.of(packageJson, encoding).validate(version);
     }
 
     private static List<String> asList(String[] values) {
