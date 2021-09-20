@@ -124,7 +124,7 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
         List<File> packageJsons = PackageJsonCollector.of(project.getBasedir(), asList(includes), asList(excludes)).collect();
 
         if (packageJsons.isEmpty()) {
-            String msg = "No package.json found in this project!";
+            String msg = "No package.json like file found in this project!";
             if (failIfNoneFound) {
                 throw new MojoFailureException(msg);
             }
@@ -132,7 +132,11 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
             return;
         }
 
-        logger.info("Checking if the version of the package.json is in sync with the version of this project...");
+        boolean singlePackageJson = packageJsons.size() == 1;
+        logger.info(format(
+            "Checking if the version of %s package.json like file%s %s in sync with the version of the pom.xml of this project...",
+            singlePackageJson ? "the" : Integer.toString(packageJsons.size()), singlePackageJson ? "" : "s",
+            singlePackageJson ? "is" : "are"));
 
         String version = project.getVersion();
         List<ConstraintViolation> violations = packageJsons //
@@ -145,10 +149,11 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
         if (!violations.isEmpty()) {
             output(violations);
 
-            boolean single = violations.size() == 1;
-            throw new MojoFailureException(
-                format("%d package.json file%s found in this project %s not in sync with the version of this project!",
-                    violations.size(), single ? "" : "s", single ? "is" : "are"));
+            boolean singleViolation = violations.size() == 1;
+            throw new MojoFailureException(format(
+                "%s package.json like file%s found in this project %s not in sync with the version of the pom.xml of this project!",
+                singleViolation ? "The" : Integer.toString(violations.size()), singleViolation ? "" : "s",
+                singleViolation ? "is" : "are"));
         }
 
         logger.info("Looks fine! :)");

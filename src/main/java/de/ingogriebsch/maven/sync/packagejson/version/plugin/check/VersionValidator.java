@@ -88,9 +88,9 @@ class VersionValidator {
                 .append(packageJsonVersion) //
                 .append("' of package.json '") //
                 .append(packageJson.getAbsolutePath()) //
-                .append("' is not in sync with the version '") //
+                .append("' is not in sync with version '") //
                 .append(pomVersion) //
-                .append("' of this project.") //
+                .append("' of the pom.xml of this project.") //
                 .toString();
         }
     }
