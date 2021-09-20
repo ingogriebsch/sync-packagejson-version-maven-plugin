@@ -15,11 +15,35 @@
  */
 package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
 
+/**
+ * Declares the set of properties that are used by the corresponding {@link CheckMojo} to control its execution.
+ * 
+ * @since 1.0.0
+ */
 interface CheckProperties {
 
+    /**
+     * Declares the files which should be included in the check.
+     * 
+     * @return the list of files to include
+     * @since 1.0.0
+     */
     String[] getIncludes();
 
+    /**
+     * Declares the files which should be excluded from the check.
+     * 
+     * @return the list of files to exclude
+     * @since 1.0.0
+     */
     String[] getExcludes();
 
+    /**
+     * Declares if the execution should fail if no <code>package.json</code> like files are found.
+     * 
+     * @return {@code true} if the execution of the mojo should fail if no <code>package.json</code> like files are found,
+     *         otherwise {@code false}
+     * @since 1.0.0
+     */
     boolean isFailIfNoneFound();
 }

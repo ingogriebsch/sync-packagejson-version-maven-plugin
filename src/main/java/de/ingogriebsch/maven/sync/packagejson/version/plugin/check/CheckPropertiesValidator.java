@@ -17,11 +17,21 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
 
 import lombok.Value;
 
+/**
+ * A validator that checks if the properties used by the {@link CheckMojo} are valid.
+ * 
+ * @since 1.0.0
+ */
 @Value(staticConstructor = "of")
 class CheckPropertiesValidator {
 
     CheckProperties properties;
 
+    /**
+     * Checks if the given properties are valid and throws an exception if not.
+     * 
+     * @since 1.0.0
+     */
     void validate() {
         // nothing to do here at the moment...
     }

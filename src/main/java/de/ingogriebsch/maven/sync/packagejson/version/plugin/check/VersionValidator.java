@@ -26,6 +26,12 @@ import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.Value;
 
+/**
+ * A component that checks if the version of the given <code>package.json</code> like file is valid (means is the same as the
+ * given version).
+ * 
+ * @since 1.0.0
+ */
 @Value(staticConstructor = "of")
 class VersionValidator {
 
@@ -33,6 +39,14 @@ class VersionValidator {
 
     private final File file;
 
+    /**
+     * Checks if the version of the given <code>package.json</code> like file is valid (means is the same as the given version).
+     * 
+     * @param version the version of the <code>pom.xml</code>
+     * @return an {@link Optional} that is either empty (if the version is valid) or contains a {@link ConstraintViolation} (if
+     *         the version is not valid).
+     * @since 1.0.0
+     */
     Optional<ConstraintViolation> validate(String version) {
         PackageJson packageJson = read(file);
 
@@ -55,6 +69,12 @@ class VersionValidator {
         return objectMapper;
     }
 
+    /**
+     * A pojo that describes that the version of the <code>package.json</code> like file is not the same as the version of the
+     * <code>pom.xml</code>.
+     * 
+     * @since 1.0.0
+     */
     @Value(staticConstructor = "of")
     static class ConstraintViolation {
 

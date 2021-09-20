@@ -34,7 +34,10 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Some description needs to be added here...
+ * Checks that the <code>package.json</code> like files that are declared as included have the same version as the version of the
+ * <code>pom.xml</code> and fails the build if not.
+ * 
+ * @since 1.0.0
  */
 @Mojo(name = "check", defaultPhase = VERIFY, requiresProject = true, threadSafe = true)
 class CheckMojo extends AbstractMojo implements CheckProperties {
@@ -73,31 +76,49 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
     @Parameter(property = PROPERTY_PREFIX + "excludes")
     private String[] excludes;
 
+    /**
+     * @see CheckProperties#isFailIfNoneFound()
+     */
     @Override
     public boolean isFailIfNoneFound() {
         return failIfNoneFound;
     }
 
+    /**
+     * @see CheckProperties#getIncludes()
+     */
     @Override
     public String[] getIncludes() {
         return includes;
     }
 
+    /**
+     * @see CheckProperties#getExcludes()
+     */
     @Override
     public String[] getExcludes() {
         return excludes;
     }
 
+    /**
+     * @see AbstractMojo#isSkipped()
+     */
     @Override
     protected boolean isSkipped() {
         return skip;
     }
 
+    /**
+     * @see AbstractMojo#validate()
+     */
     @Override
     protected void validate() throws Exception {
         CheckPropertiesValidator.of(this).validate();
     }
 
+    /**
+     * @see AbstractMojo#doExecute()
+     */
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
         List<File> packageJsons = PackageJsonCollector.of(project.getBasedir(), asList(includes), asList(excludes)).collect();

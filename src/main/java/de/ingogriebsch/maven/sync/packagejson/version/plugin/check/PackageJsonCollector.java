@@ -27,6 +27,11 @@ import lombok.Value;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
+/**
+ * A component that collects the <code>package.json</code> like files to be checked by the {@link CheckMojo}.
+ * 
+ * @since 1.0.0
+ */
 @Value(staticConstructor = "of")
 class PackageJsonCollector {
 
@@ -34,22 +39,58 @@ class PackageJsonCollector {
     List<String> includes;
     List<String> excludes;
 
+    /**
+     * Returns the list of <code>package.json</code> like files that are found based on the given includes and excludes.
+     * 
+     * @return the list of <code>package.json</code> like files that are found based on the given includes and excludes
+     * @since 1.0.0
+     */
     List<File> collect() {
         return stream(new FileSetManager().getIncludedFiles(prepareFileSet())).map(this::file).collect(toList());
     }
 
+    /**
+     * A factory method that allows to create an instance of this class with the given base directory.
+     * 
+     * @param baseDir the base directory used to collect the pacakge.json like files
+     * @return An instance of type {@link PackageJsonCollector}
+     * @since 1.0.0
+     */
     static PackageJsonCollector of(File baseDir) {
         return of(baseDir, (List<String>) null, (List<String>) null);
     }
 
+    /**
+     * A factory method that allows to create an instance of this class with the given base directory, include and exclude.
+     * 
+     * @param baseDir the base directory used to collect the pacakge.json like files
+     * @param include a file-set patterns that is interpreted relative to the given base directory
+     * @param exclude a file-set patterns that is interpreted relative to the given base directory
+     * @return An instance of type {@link PackageJsonCollector}
+     * @since 1.0.0
+     */
     static PackageJsonCollector of(File baseDir, String include, String exclude) {
         return of(baseDir, newArrayList(include), newArrayList(exclude));
     }
 
+    /**
+     * A factory method that allows to create an instance of this class based on this instance and the given include.
+     * 
+     * @param include a file-set patterns that is interpreted relative to the given base directory
+     * @return An instance of type {@link PackageJsonCollector}
+     * @since 1.0.0
+     */
     PackageJsonCollector withInclude(String include) {
         return of(baseDir, newArrayList(include), excludes);
     }
 
+    /**
+     * A factory method that allows to create an instance of this class based on this instance and the given exclude.
+     * 
+     * @param exclude a file-set patterns that is interpreted relative to the given base directory
+     * @return An instance of type {@link PackageJsonCollector}
+     * @since 1.0.0
+     */
     PackageJsonCollector withExclude(String exclude) {
         return of(baseDir, includes, newArrayList(exclude));
     }
