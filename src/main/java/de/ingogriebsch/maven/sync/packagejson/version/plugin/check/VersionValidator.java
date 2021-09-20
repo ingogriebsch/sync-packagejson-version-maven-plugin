@@ -15,6 +15,8 @@
  */
 package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
 
+import static java.util.Optional.ofNullable;
+
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 import java.io.File;
@@ -51,8 +53,8 @@ class VersionValidator {
     Optional<ConstraintViolation> validate(String version) {
         PackageJson packageJson = read(file);
 
-        return matches(packageJson.getVersion(), version) ? Optional.empty()
-            : Optional.of(ConstraintViolation.of(file, packageJson.getVersion(), version));
+        return ofNullable(
+            matches(packageJson.getVersion(), version) ? null : ConstraintViolation.of(file, packageJson.getVersion(), version));
     }
 
     private static boolean matches(String packageJsonVersion, String pomVersion) {
