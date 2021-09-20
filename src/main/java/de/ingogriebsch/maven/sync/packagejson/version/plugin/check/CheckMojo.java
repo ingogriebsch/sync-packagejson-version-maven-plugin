@@ -133,12 +133,12 @@ class CheckMojo extends AbstractMojo implements CheckProperties {
         logger.info("Looks fine! :)");
     }
 
-    private Optional<ConstraintViolation> validate(File packageJson, String version) {
-        return VersionValidator.of(packageJson).validate(version);
-    }
-
     private void output(List<ConstraintViolation> violations) {
         violations.forEach(v -> logger.error(v.toString()));
+    }
+
+    private static Optional<ConstraintViolation> validate(File packageJson, String version) {
+        return VersionValidator.of(packageJson).validate(version);
     }
 
     private static List<String> asList(String[] values) {
