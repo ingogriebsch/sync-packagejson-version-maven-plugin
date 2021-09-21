@@ -28,6 +28,7 @@ import java.util.Optional;
 
 import com.google.inject.internal.util.Lists;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.check.VersionValidator.ConstraintViolation;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;

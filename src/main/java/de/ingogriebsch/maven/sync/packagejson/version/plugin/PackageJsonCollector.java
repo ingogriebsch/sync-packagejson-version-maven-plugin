@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
+package de.ingogriebsch.maven.sync.packagejson.version.plugin;
 
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
@@ -33,7 +33,7 @@ import org.apache.maven.shared.model.fileset.util.FileSetManager;
  * @since 1.0.0
  */
 @Value(staticConstructor = "of")
-class PackageJsonCollector {
+public class PackageJsonCollector {
 
     File baseDir;
     List<String> includes;
@@ -45,7 +45,7 @@ class PackageJsonCollector {
      * @return the list of <code>package.json</code> like files that are found based on the given includes and excludes
      * @since 1.0.0
      */
-    List<File> collect() {
+    public List<File> collect() {
         return stream(new FileSetManager().getIncludedFiles(prepareFileSet())).map(this::file).collect(toList());
     }
 
@@ -56,7 +56,7 @@ class PackageJsonCollector {
      * @return An instance of type {@link PackageJsonCollector}
      * @since 1.0.0
      */
-    static PackageJsonCollector of(File baseDir) {
+    public static PackageJsonCollector of(File baseDir) {
         return of(baseDir, (List<String>) null, (List<String>) null);
     }
 
@@ -69,7 +69,7 @@ class PackageJsonCollector {
      * @return An instance of type {@link PackageJsonCollector}
      * @since 1.0.0
      */
-    static PackageJsonCollector of(File baseDir, String include, String exclude) {
+    public static PackageJsonCollector of(File baseDir, String include, String exclude) {
         return of(baseDir, newArrayList(include), newArrayList(exclude));
     }
 
@@ -80,7 +80,7 @@ class PackageJsonCollector {
      * @return An instance of type {@link PackageJsonCollector}
      * @since 1.0.0
      */
-    PackageJsonCollector withInclude(String include) {
+    public PackageJsonCollector withInclude(String include) {
         return of(baseDir, newArrayList(include), excludes);
     }
 
@@ -91,7 +91,7 @@ class PackageJsonCollector {
      * @return An instance of type {@link PackageJsonCollector}
      * @since 1.0.0
      */
-    PackageJsonCollector withExclude(String exclude) {
+    public PackageJsonCollector withExclude(String exclude) {
         return of(baseDir, includes, newArrayList(exclude));
     }
 

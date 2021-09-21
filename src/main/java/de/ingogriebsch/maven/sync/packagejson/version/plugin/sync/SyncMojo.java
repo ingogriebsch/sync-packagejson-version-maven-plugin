@@ -24,6 +24,7 @@ import java.util.List;
 
 import com.google.inject.internal.util.Lists;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
