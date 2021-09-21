@@ -87,3 +87,29 @@ jobs:
           publish_dir: ./target/generated-docs
           user_email: 'github-actions[bot]@users.noreply.github.com'
           user_name: 'github-actions[bot]'
+
+      - name: Prepare release documentation
+        id: prepare-release-documentation
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          TAG_NAME="${GITHUB_REF##refs/tags/}"
+          echo "::set-output name=dest_dir::${TAG_NAME}"
+          echo "::set-output name=base_tag::${TAG_NAME}"
+          echo "::set-output name=tag_name::${TAG_NAME}-docs"
+          
+      - name: Publish release documentation
+        # https://github.com/peaceiris/actions-gh-pages
+        uses: peaceiris/actions-gh-pages@v3.8.0
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          cname: sync-packagejson-version-maven-plugin.ingogriebsch.de
+          commit_message: 'docs: publish release documentation to gh-pages'
+          destination_dir: ${{ steps.prepare-release-documentation.outputs.dest_dir }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          keep_files: true
+          publish_branch: gh-pages
+          publish_dir: ./target/generated-docs
+          tag_message: 'Tag documentation for ${{ steps.prepare-release-documentation.outputs.base_tag }}'
+          tag_name: ${{ steps.prepare-release-documentation.outputs.tag_name }}
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          user_name: 'github-actions[bot]'
