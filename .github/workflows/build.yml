@@ -66,21 +66,21 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
 
-      - name: Prepare main documentation
-        id: prepare-main-documentation
+      - name: Prepare current documentation
+        id: prepare-current-documentation
         if: github.ref == 'refs/heads/main'
         run: |
           TAG_NAME="current"
           echo "::set-output name=dest_dir::${TAG_NAME}"
 
-      - name: Publish main documentation
+      - name: Publish current documentation
         # https://github.com/peaceiris/actions-gh-pages
         uses: peaceiris/actions-gh-pages@v3.8.0
         if: github.ref == 'refs/heads/main'
         with:
           cname: sync-packagejson-version-maven-plugin.ingogriebsch.de
-          commit_message: 'docs: publish main documentation to gh-pages'
-          destination_dir: ${{ steps.prepare-main-documentation.outputs.dest_dir }}
+          commit_message: 'docs: publish current documentation to gh-pages'
+          destination_dir: ${{ steps.prepare-current-documentation.outputs.dest_dir }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           keep_files: true
           publish_branch: gh-pages
