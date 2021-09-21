@@ -28,7 +28,7 @@ import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
 /**
- * A component that collects the <code>package.json</code> like files to be checked by the {@link CheckMojo}.
+ * A component that collects the <code>package.json</code> like files.
  * 
  * @since 1.0.0
  */
