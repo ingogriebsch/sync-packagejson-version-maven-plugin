@@ -7,12 +7,54 @@ This plugin has the following goals:
 |===
 |Goal |Description
 
+|<<goals:sync,sync-packagejson-version:sync>>
+|Synchronizes the versions of the package.json like files in the project with the version of the pom.xml.
+
 |<<goals:check,sync-packagejson-version:check>>
 |Checks if the package.json files located in the project have the same version as the version defined in the pom.xml.
 
 |<<goals:help,sync-packagejson-version:help>>
 |Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
 |===
+
+[[goals:sync]]
+== sync
+
+Synchronizes the versions of the package.json like files in the project with the version of the pom.xml.
+
+=== Attributes
+
+*   Requires a {apache-maven-url}[Maven] project to be executed.
+*   Executes by direct invocation only.
+
+=== Parameters
+
+Parameter prefix is `sync-packagejson-version.sync.`
+
+[frame=none,stripes=even,cols="1,1,2,1,1,1"]
+|===
+|Name |Type |Description |Mandatory |Default |User property
+
+|encoding
+|String
+|The encoding in which the files are interpreted while executing this mojo.
+|false
+|${project.build.sourceEncoding}
+|encoding
+
+|includes
+|String[]
+|List of files to include. Specified as file-set patterns which are relative to the projects root directory.
+|false
+|package.json
+|includes
+
+|excludes
+|String[]
+|List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
+|false
+|
+|excludes
 
 [[goals:check]]
 == check

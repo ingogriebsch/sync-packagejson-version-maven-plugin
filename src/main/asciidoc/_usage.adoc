@@ -1,7 +1,13 @@
 [[usage]]
 = Usage
 
-To use this plugin, include the appropriate XML in the plugins section of your pom.xml, as shown in the following example:
+To synchronize the version of the package.json with the version of the pom.xml you need to execute the <<goals:sync,sync>> goal manually.
+[source,bash,indent=0,subs="verbatim,quotes,attributes"]
+----
+$ mvn sync-packagejson-version:sync
+----
+
+To check that the version of the package.json is in sync with the version of the pom.xml on a regular base, include the appropriate XML in the plugins section of your pom.xml, as shown in the following example:
 [source,xml,indent=0,subs="verbatim,quotes,attributes"]
 ----
 <project>
