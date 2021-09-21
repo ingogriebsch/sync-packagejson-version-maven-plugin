@@ -21,6 +21,7 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.VERIFY;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -140,7 +141,7 @@ class CheckMojo extends AbstractMojo {
     }
 
     private static Optional<ConstraintViolation> validate(String version, File packageJson, String encoding) {
-        return VersionValidator.of(packageJson, encoding).validate(version);
+        return VersionValidator.of(packageJson, Charset.forName(encoding)).validate(version);
     }
 
     private static List<String> asList(String[] values) {

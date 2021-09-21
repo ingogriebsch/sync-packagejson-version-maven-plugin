@@ -21,6 +21,7 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +41,7 @@ class VersionValidator {
     private static final ObjectMapper objectMapper = objectMapper();
 
     File file;
-    String encoding;
+    Charset encoding;
 
     /**
      * Checks if the version of the given <code>package.json</code> like file is valid (means is the same as the given version).

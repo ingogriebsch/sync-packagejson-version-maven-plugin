@@ -84,6 +84,7 @@ class CheckMojoTest {
         CheckMojo mojo = new CheckMojo();
         apply(mojo, "log", mock(Log.class));
         apply(mojo, "project", mavenProject);
+        apply(mojo, "encoding", UTF_8.toString());
         apply(mojo, "includes", new String[] { "package.json" });
 
         assertThatThrownBy(() -> mojo.execute()).isInstanceOf(MojoFailureException.class);
@@ -104,6 +105,7 @@ class CheckMojoTest {
         CheckMojo mojo = new CheckMojo();
         apply(mojo, "log", mock(Log.class));
         apply(mojo, "project", mavenProject);
+        apply(mojo, "encoding", UTF_8.toString());
         apply(mojo, "includes", new String[] { "package.json" });
 
         assertThatNoException().isThrownBy(() -> mojo.execute());
