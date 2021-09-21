@@ -47,12 +47,12 @@ Parameter prefix is `sync-packagejson-version.check.`
 |false
 |skipCheck
 
-|failIfNoneFound
-|Boolean
-|Flag to control if the execution of the goal should fail if no package.json is found.
+|encoding
+|String
+|The encoding in which the files are interpreted while executing this mojo.
 |false
-|true
-|failIfNoneFound
+|${project.build.sourceEncoding}
+|encoding
 
 |includes
 |String[]
@@ -67,6 +67,13 @@ Parameter prefix is `sync-packagejson-version.check.`
 |false
 |
 |excludes
+
+|failIfNoneFound
+|Boolean
+|Flag to control if the execution of the goal should fail if no package.json is found.
+|false
+|true
+|failIfNoneFound
 |===
 
 [[goals:help]]
