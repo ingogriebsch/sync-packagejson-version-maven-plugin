@@ -55,6 +55,7 @@ Parameter prefix is `sync-packagejson-version.sync.`
 |false
 |
 |excludes
+|===
 
 [[goals:check]]
 == check
