@@ -22,11 +22,13 @@ This plugin has the following goals:
 
 Synchronizes the versions of the package.json like files in the project with the version of the pom.xml.
 
+[[goals:sync:attributes]]
 === Attributes
 
 *   Requires a {apache-maven-url}[Maven] project to be executed.
 *   Executes by direct invocation only.
 
+[[goals:sync:parameters]]
 === Parameters
 
 Parameter prefix is `sync-packagejson-version.sync.`
@@ -62,12 +64,14 @@ Parameter prefix is `sync-packagejson-version.sync.`
 
 Checks if the package.json files located in the project have the same version as the version defined in the pom.xml of the project.
 
+[[goals:check:attributes]]
 === Attributes
 
 *   Requires a {apache-maven-url}[Maven] project to be executed.
 *   Binds by default to the lifecycle phase `verify`.
 *   The goal is thread-safe and supports parallel builds.
 
+[[goals:check:parameters]]
 === Parameters
 
 Parameter prefix is `sync-packagejson-version.check.`
@@ -124,10 +128,12 @@ Parameter prefix is `sync-packagejson-version.check.`
 
 Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
 
+[[goals:help:attributes]]
 === Attributes
 
 *   The goal is thread-safe and supports parallel builds.
 
+[[goals:help:parameters]]
 === Parameters
 
 Parameter prefix is `sync-packagejson-version.help.`
