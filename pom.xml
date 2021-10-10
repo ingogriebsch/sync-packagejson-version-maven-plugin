@@ -338,6 +338,11 @@
                         <project-version>${project.version}</project-version>
                         <project-description>${project.description}</project-description>
                     </attributes>
+                    <logHandler>
+                    	<failIf>
+                    		<severity>WARN</severity>
+                    	</failIf>
+                    </logHandler>
                     <outputDirectory>${doc.target.directory}</outputDirectory>
                     <sourceDirectory>${doc.source.directory}</sourceDirectory>
                 </configuration>
