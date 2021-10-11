@@ -18,6 +18,8 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
 import static java.util.Optional.ofNullable;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
+import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +42,7 @@ class VersionValidator {
 
     private static final ObjectMapper objectMapper = objectMapper();
 
+    File baseDir;
     File file;
     Charset encoding;
 
@@ -54,8 +57,15 @@ class VersionValidator {
     Optional<ConstraintViolation> validate(String version) {
         PackageJson packageJson = read(file);
 
-        return ofNullable(
-            matches(packageJson.getVersion(), version) ? null : ConstraintViolation.of(file, packageJson.getVersion(), version));
+        return ofNullable(matches(packageJson.getVersion(), version) ? null : constraintViolation(packageJson, version));
+    }
+
+    private ConstraintViolation constraintViolation(PackageJson packageJson, String pomVersion) {
+        return ConstraintViolation.of( //
+            separatorsToUnix(substringAfter(file.getAbsolutePath(), baseDir.getAbsolutePath() + File.separator)), //
+            packageJson.getVersion(), //
+            pomVersion //
+        );
     }
 
     private static boolean matches(String packageJsonVersion, String pomVersion) {
@@ -82,7 +92,7 @@ class VersionValidator {
     @Value(staticConstructor = "of")
     static class ConstraintViolation {
 
-        File packageJson;
+        String packageJsonName;
         String packageJsonVersion;
         String pomVersion;
 
@@ -90,11 +100,11 @@ class VersionValidator {
         public String toString() {
             return new StringBuilder("Version '") //
                 .append(packageJsonVersion) //
-                .append("' of package.json '") //
-                .append(packageJson.getAbsolutePath()) //
+                .append("' of '") //
+                .append(packageJsonName) //
                 .append("' is not in sync with version '") //
                 .append(pomVersion) //
-                .append("' of the pom.xml of this project.") //
+                .append("' of the pom.xml.") //
                 .toString();
         }
     }

@@ -99,7 +99,8 @@ class CheckMojo extends AbstractMojo {
      */
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
-        List<File> packageJsons = PackageJsonCollector.of(project.getBasedir(), asList(includes), asList(excludes)).collect();
+        File baseDir = project.getBasedir();
+        List<File> packageJsons = PackageJsonCollector.of(baseDir, asList(includes), asList(excludes)).collect();
 
         if (packageJsons.isEmpty()) {
             String msg = "No package.json like file found in this project!";
@@ -118,7 +119,7 @@ class CheckMojo extends AbstractMojo {
         String version = project.getVersion();
         List<ConstraintViolation> violations = packageJsons //
             .stream() //
-            .map(pj -> validate(version, pj, encoding)) //
+            .map(pj -> validate(version, baseDir, pj, encoding)) //
             .filter(Optional::isPresent) //
             .map(Optional::get) //
             .collect(toList());
@@ -139,8 +140,8 @@ class CheckMojo extends AbstractMojo {
         violations.forEach(v -> logger.error(v.toString()));
     }
 
-    private static Optional<ConstraintViolation> validate(String version, File packageJson, String encoding) {
-        return VersionValidator.of(packageJson, Charset.forName(encoding)).validate(version);
+    private static Optional<ConstraintViolation> validate(String version, File baseDir, File packageJson, String encoding) {
+        return VersionValidator.of(baseDir, packageJson, Charset.forName(encoding)).validate(version);
     }
 
     private static List<String> asList(String[] values) {

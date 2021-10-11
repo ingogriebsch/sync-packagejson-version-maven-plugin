@@ -37,7 +37,7 @@ class VersionValidatorTest {
         File packageJson = new File(tempDir, "package.json");
         writeStringToFile(packageJson, "{\"version\": \"" + version + "\"}", UTF_8);
 
-        VersionValidator validator = VersionValidator.of(packageJson, UTF_8);
+        VersionValidator validator = VersionValidator.of(tempDir, packageJson, UTF_8);
         assertThat(validator.validate(version)).isEmpty();
     }
 
@@ -48,12 +48,9 @@ class VersionValidatorTest {
         String packageJsonVersion = "1.2.4-SNAPSHOT";
         writeStringToFile(packageJson, "{\"version\": \"" + packageJsonVersion + "\"}", UTF_8);
 
-        VersionValidator validator = VersionValidator.of(packageJson, UTF_8);
-        assertThat(validator.validate(pomVersion)) //
-            .get() //
-            .hasFieldOrPropertyWithValue("packageJson", packageJson) //
-            .hasFieldOrPropertyWithValue("packageJsonVersion", packageJsonVersion) //
-            .hasFieldOrPropertyWithValue("pomVersion", pomVersion);
+        VersionValidator validator = VersionValidator.of(tempDir, packageJson, UTF_8);
+
+        assertThat(validator.validate(pomVersion)).isNotEmpty();
     }
 
     @Test
@@ -61,7 +58,7 @@ class VersionValidatorTest {
         File packageJson = new File(tempDir, "package.json");
         writeStringToFile(packageJson, "some content", UTF_8);
 
-        VersionValidator validator = VersionValidator.of(packageJson, UTF_8);
+        VersionValidator validator = VersionValidator.of(tempDir, packageJson, UTF_8);
         assertThatThrownBy(() -> validator.validate("1.2.3-SNAPSHOT")).isInstanceOf(IOException.class);
     }
 
@@ -70,15 +67,14 @@ class VersionValidatorTest {
 
         @Test
         void toString_should_return_a_string_containing_all_the_necessary_information() throws IOException {
-            String packageJsonFilename = "package.json";
+            String packageJsonName = "package.json";
             String packageJsonVersion = "1.0.0-SNAPSHOT";
             String pomVersion = "1.2.0-SNAPSHOT";
 
-            ConstraintViolation constraintViolation =
-                ConstraintViolation.of(new File(packageJsonFilename), packageJsonVersion, pomVersion);
+            ConstraintViolation constraintViolation = ConstraintViolation.of(packageJsonName, packageJsonVersion, pomVersion);
 
             assertThat(constraintViolation.toString()) //
-                .contains(packageJsonFilename) //
+                .contains(packageJsonName) //
                 .contains(packageJsonVersion) //
                 .contains(pomVersion);
         }
