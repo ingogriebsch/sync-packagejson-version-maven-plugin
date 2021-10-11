@@ -40,7 +40,7 @@ class VersionWriterTest {
         File packageJson = new File(tempDir, "package.json");
         writeStringToFile(packageJson, "{\"version\": \"1.0.0\"}", UTF_8);
 
-        VersionWriter validator = VersionWriter.of(packageJson, UTF_8);
+        VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
         assertThatNoException().isThrownBy(() -> validator.write(version));
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -54,7 +54,7 @@ class VersionWriterTest {
         copyFile(new File(VersionWriterTest.class.getResource("versionWriter/package.json").toURI()), packageJson);
         String contentBefore = readFileToString(packageJson, UTF_8);
 
-        VersionWriter validator = VersionWriter.of(packageJson, UTF_8);
+        VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
         assertThatNoException().isThrownBy(() -> validator.write("0.2.0"));
 
         String contentAfter = readFileToString(packageJson, UTF_8);
@@ -66,7 +66,7 @@ class VersionWriterTest {
         File packageJson = new File(tempDir, "package.json");
         writeStringToFile(packageJson, "some content", UTF_8);
 
-        VersionWriter validator = VersionWriter.of(packageJson, UTF_8);
+        VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
         assertThatThrownBy(() -> validator.write("1.2.3-SNAPSHOT")).isInstanceOf(IOException.class);
     }
 }

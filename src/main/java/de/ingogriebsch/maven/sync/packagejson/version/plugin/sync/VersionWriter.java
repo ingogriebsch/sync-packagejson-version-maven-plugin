@@ -15,15 +15,19 @@
  */
 package de.ingogriebsch.maven.sync.packagejson.version.plugin.sync;
 
+import static java.util.Optional.empty;
 import static java.util.stream.Collectors.toList;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
+import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
+import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +39,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
- * A component that overwrites the version of the <code>package.json</code> with the version of the <code>pom.xml</code>.
+ * A component that overwrites the version of the <code>package.json</code> with
+ * the version of the <code>pom.xml</code>.
  * 
  * @since 1.0.0
  */
@@ -45,6 +50,7 @@ class VersionWriter {
     private static final Pattern pattern = Pattern.compile("^.*\"version\".*:.*\"(.+)\".*$");
     private static final ObjectMapper objectMapper = objectMapper();
 
+    File baseDir;
     File file;
     Charset encoding;
 
@@ -52,16 +58,28 @@ class VersionWriter {
      * Writes the version to the given file.
      * 
      * @param version the version that should be written to the file
+     * @return an {@link Optional} that is either empty (if the version is already
+     *         the same as the version in the pom.xml) or contains a
+     *         {@link Protocol} (if the version needs to be synchronized).
      * @since 1.0.0
      */
-    void write(String version) {
+    Optional<Protocol> write(String version) {
         if (version.equals(extractVersion(file, encoding))) {
-            return;
+            return empty();
         }
 
         List<String> lines = readLines(file, encoding);
         lines = replaceVersion(lines, version);
         writeLines(lines, file, encoding);
+
+        return Optional.of(protocol(version));
+    }
+
+    private Protocol protocol(String version) {
+        return Protocol.of( //
+            separatorsToUnix(substringAfter(file.getAbsolutePath(), baseDir.getAbsolutePath() + File.separator)), //
+            version //
+        );
     }
 
     @SneakyThrows(IOException.class)
@@ -98,6 +116,29 @@ class VersionWriter {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(FAIL_ON_UNKNOWN_PROPERTIES);
         return objectMapper;
+    }
+
+    /**
+     * A pojo that describes that the version of the <code>package.json</code> like
+     * file is not the same as the version of the <code>pom.xml</code>.
+     * 
+     * @since 1.0.0
+     */
+    @Value(staticConstructor = "of")
+    static class Protocol {
+
+        String packageJsonName;
+        String pomVersion;
+
+        @Override
+        public String toString() {
+            return new StringBuilder("Set the version in '") //
+                .append(packageJsonName) //
+                .append("' to '") //
+                .append(pomVersion) //
+                .append("'.") //
+                .toString();
+        }
     }
 
     @Data

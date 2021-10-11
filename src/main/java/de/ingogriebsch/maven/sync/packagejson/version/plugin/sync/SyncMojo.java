@@ -50,7 +50,8 @@ class SyncMojo extends AbstractMojo {
     private String encoding;
 
     /**
-     * List of files to include. Specified as file-set patterns which are relative to the projects root directory.
+     * List of files to include. Specified as file-set patterns which are relative
+     * to the projects root directory.
      * 
      * @since 1.0.0
      */
@@ -58,7 +59,8 @@ class SyncMojo extends AbstractMojo {
     private String[] includes;
 
     /**
-     * List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
+     * List of files to exclude. Specified as file-set patterns which are relative
+     * to the projects root directory.
      * 
      * @since 1.0.0
      */
@@ -78,7 +80,8 @@ class SyncMojo extends AbstractMojo {
      */
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
-        List<File> packageJsons = PackageJsonCollector.of(project.getBasedir(), asList(includes), asList(excludes)).collect();
+        File baseDir = project.getBasedir();
+        List<File> packageJsons = PackageJsonCollector.of(baseDir, asList(includes), asList(excludes)).collect();
 
         if (packageJsons.isEmpty()) {
             throw new MojoFailureException("No package.json like file found in this project!");
@@ -90,13 +93,13 @@ class SyncMojo extends AbstractMojo {
                 packageJsons.size(), singlePackageJson ? "" : "s"));
 
         String version = project.getVersion();
-        packageJsons.forEach(pj -> synchronize(version, pj, encoding));
+        packageJsons.forEach(packageJson -> synchronize(version, baseDir, packageJson, encoding));
 
         logger.info("Done! :)");
     }
 
-    private static void synchronize(String version, File packageJson, String encoding) {
-        VersionWriter.of(packageJson, forName(encoding)).write(version);
+    private void synchronize(String version, File baseDir, File packageJson, String encoding) {
+        VersionWriter.of(baseDir, packageJson, forName(encoding)).write(version).ifPresent(p -> logger.info(p.toString()));
     }
 
     private static List<String> asList(String[] values) {
