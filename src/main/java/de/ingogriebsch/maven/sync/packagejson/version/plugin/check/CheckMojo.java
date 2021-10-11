@@ -111,10 +111,8 @@ class CheckMojo extends AbstractMojo {
         }
 
         boolean singlePackageJson = packageJsons.size() == 1;
-        logger.info(format(
-            "Checking if the version of %s package.json like file%s %s in sync with the version of the pom.xml of this project...",
-            singlePackageJson ? "the" : Integer.toString(packageJsons.size()), singlePackageJson ? "" : "s",
-            singlePackageJson ? "is" : "are"));
+        logger.info(format("Checking if the version of %d package.json like file%s %s in sync with the version of the pom.xml...",
+            packageJsons.size(), singlePackageJson ? "" : "s", singlePackageJson ? "is" : "are"));
 
         String version = project.getVersion();
         List<ConstraintViolation> violations = packageJsons //
@@ -128,10 +126,9 @@ class CheckMojo extends AbstractMojo {
             output(violations);
 
             boolean singleViolation = violations.size() == 1;
-            throw new MojoFailureException(format(
-                "%s package.json like file%s found in this project %s not in sync with the version of the pom.xml of this project!",
-                singleViolation ? "The" : Integer.toString(violations.size()), singleViolation ? "" : "s",
-                singleViolation ? "is" : "are"));
+            throw new MojoFailureException(
+                format("%d package.json like file%s found in this project %s not in sync with the version of the pom.xml!",
+                    violations.size(), singleViolation ? "" : "s", singleViolation ? "is" : "are"));
         }
 
         logger.info("Looks fine! :)");
