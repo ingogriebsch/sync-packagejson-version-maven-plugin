@@ -82,7 +82,7 @@ class PackageJsonCollectorTest {
 
         PackageJsonCollector collector = PackageJsonCollector.of(tempDir).withInclude("**/package.json");
         List<File> collected = collector.collect();
-        assertThat(collected).containsExactly(packageJson2, packageJson1);
+        assertThat(collected).containsExactlyInAnyOrder(packageJson1, packageJson2);
     }
 
     @Test
