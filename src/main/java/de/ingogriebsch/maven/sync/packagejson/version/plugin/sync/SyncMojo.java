@@ -50,8 +50,7 @@ class SyncMojo extends AbstractMojo {
     private String encoding;
 
     /**
-     * List of files to include. Specified as file-set patterns which are relative
-     * to the projects root directory.
+     * List of files to include. Specified as file-set patterns which are relative to the projects root directory.
      * 
      * @since 1.0.0
      */
@@ -59,8 +58,7 @@ class SyncMojo extends AbstractMojo {
     private String[] includes;
 
     /**
-     * List of files to exclude. Specified as file-set patterns which are relative
-     * to the projects root directory.
+     * List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
      * 
      * @since 1.0.0
      */

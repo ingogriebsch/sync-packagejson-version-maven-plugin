@@ -39,8 +39,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
- * A component that overwrites the version of the <code>package.json</code> with
- * the version of the <code>pom.xml</code>.
+ * A component that overwrites the version of the <code>package.json</code> with the version of the <code>pom.xml</code>.
  * 
  * @since 1.0.0
  */
@@ -58,9 +57,8 @@ class VersionWriter {
      * Writes the version to the given file.
      * 
      * @param version the version that should be written to the file
-     * @return an {@link Optional} that is either empty (if the version is already
-     *         the same as the version in the pom.xml) or contains a
-     *         {@link Protocol} (if the version needs to be synchronized).
+     * @return an {@link Optional} that is either empty (if the version is already the same as the version in the pom.xml) or
+     *         contains a {@link Protocol} (if the version needs to be synchronized).
      * @since 1.0.0
      */
     Optional<Protocol> write(String version) {
@@ -119,8 +117,8 @@ class VersionWriter {
     }
 
     /**
-     * A pojo that describes that the version of the <code>package.json</code> like
-     * file is not the same as the version of the <code>pom.xml</code>.
+     * A pojo that describes that the version of the <code>package.json</code> like file is not the same as the version of the
+     * <code>pom.xml</code>.
      * 
      * @since 1.0.0
      */
