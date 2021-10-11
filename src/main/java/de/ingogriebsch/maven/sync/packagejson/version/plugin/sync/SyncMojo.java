@@ -85,8 +85,9 @@ class SyncMojo extends AbstractMojo {
         }
 
         boolean singlePackageJson = packageJsons.size() == 1;
-        logger.info(format("Synchronizing the version of %d package.json like file%s with the version of the pom.xml...",
-            packageJsons.size(), singlePackageJson ? "" : "s"));
+        logger
+            .info(format("Synchronizing the version of the %d found package.json like file%s with the version of the pom.xml...",
+                packageJsons.size(), singlePackageJson ? "" : "s"));
 
         String version = project.getVersion();
         packageJsons.forEach(pj -> synchronize(version, pj, encoding));

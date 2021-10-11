@@ -111,7 +111,8 @@ class CheckMojo extends AbstractMojo {
         }
 
         boolean singlePackageJson = packageJsons.size() == 1;
-        logger.info(format("Checking if the version of %d package.json like file%s %s in sync with the version of the pom.xml...",
+        logger.info(format(
+            "Checking if the version of the %d found package.json like file%s %s in sync with the version of the pom.xml...",
             packageJsons.size(), singlePackageJson ? "" : "s", singlePackageJson ? "is" : "are"));
 
         String version = project.getVersion();
