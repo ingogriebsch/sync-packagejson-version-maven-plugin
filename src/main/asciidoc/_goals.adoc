@@ -48,7 +48,7 @@ Parameter prefix is `sync-packagejson-version.sync.`
 |String[]
 |List of files to include. Specified as file-set patterns which are relative to the projects root directory.
 |false
-|package.json
+|package.json,package-lock.json
 |includes
 
 |excludes
@@ -105,7 +105,7 @@ Parameter prefix is `sync-packagejson-version.check.`
 |String[]
 |List of files to include. Specified as file-set patterns which are relative to the projects root directory.
 |false
-|package.json
+|package.json,package-lock.json
 |includes
 
 |excludes

@@ -54,7 +54,7 @@ class SyncMojo extends AbstractMojo {
      * 
      * @since 1.0.0
      */
-    @Parameter(property = PROPERTY_PREFIX + "includes", defaultValue = "package.json")
+    @Parameter(property = PROPERTY_PREFIX + "includes", defaultValue = "package.json,package-lock.json")
     private String[] includes;
 
     /**
