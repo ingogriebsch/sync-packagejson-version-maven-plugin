@@ -444,7 +444,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Ingo Griebsch</span><br>
 <span id="revnumber">version 1.0.0-SNAPSHOT,</span>
-<span id="revdate">2021-09-21</span>
+<span id="revdate">2021-10-11</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -456,8 +456,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#goals">4. Goals</a>
 <ul class="sectlevel2">
 <li><a href="#goals:sync">4.1. sync</a></li>
+<li><a href="#goals:check">4.2. check</a></li>
+<li><a href="#goals:help">4.3. help</a></li>
 </ul>
 </li>
+<li><a href="#integration">5. Integration</a>
+<ul class="sectlevel2">
+<li><a href="#integration:eclipse">5.1. Eclipse</a></li>
+</ul>
+</li>
+<li><a href="#license">License</a></li>
 </ul>
 </div>
 </div>
@@ -643,7 +651,7 @@ whether distributed in print or electronically.
 <p>Synchronizes the versions of the package.json like files in the project with the version of the pom.xml.</p>
 </div>
 <div class="sect3">
-<h4 id="attributes"><a class="anchor" href="#attributes"></a><a class="link" href="#attributes">4.1.1. Attributes</a></h4>
+<h4 id="goals:sync:attributes"><a class="anchor" href="#goals:sync:attributes"></a><a class="link" href="#goals:sync:attributes">4.1.1. Attributes</a></h4>
 <div class="ulist">
 <ul>
 <li>
@@ -656,18 +664,18 @@ whether distributed in print or electronically.
 </div>
 </div>
 <div class="sect3">
-<h4 id="parameters"><a class="anchor" href="#parameters"></a><a class="link" href="#parameters">4.1.2. Parameters</a></h4>
+<h4 id="goals:sync:parameters"><a class="anchor" href="#goals:sync:parameters"></a><a class="link" href="#goals:sync:parameters">4.1.2. Parameters</a></h4>
 <div class="paragraph">
 <p>Parameter prefix is <code>sync-packagejson-version.sync.</code></p>
 </div>
 <table class="tableblock frame-none grid-all stripes-even stretch">
 <colgroup>
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 28.5714%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2858%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+<col style="width: 10%;">
 </colgroup>
 <thead>
 <tr>
@@ -702,145 +710,204 @@ whether distributed in print or electronically.
 <td class="tableblock halign-left valign-top"><p class="tableblock">List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">excludes</p>
-<p class="tableblock"><a id="goals:check"></a>
-== check</p>
-<p class="tableblock">Checks if the package.json files located in the project have the same version as the version defined in the pom.xml of the project.</p>
-<p class="tableblock">=== Attributes</p>
-<p class="tableblock">*   Requires a <a href="https://maven.apache.org/">Maven</a> project to be executed.
-*   Binds by default to the lifecycle phase <code>verify</code>.
-*   The goal is thread-safe and supports parallel builds.</p>
-<p class="tableblock">=== Parameters</p>
-<p class="tableblock">Parameter prefix is <code>sync-packagejson-version.check.</code></p>
-<p class="tableblock">[frame=none,stripes=even,cols="1,1,2,1,1,1"]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">excludes</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>|Name |Type |Description |Mandatory |Default |User property</p>
 </div>
-<div class="paragraph">
-<p>|skip
-|Boolean
-|Flag to control if the execution of the goal should be skipped.
-|false
-|false
-|skip</p>
 </div>
+<div class="sect2">
+<h3 id="goals:check"><a class="anchor" href="#goals:check"></a><a class="link" href="#goals:check">4.2. check</a></h3>
 <div class="paragraph">
-<p>|skipCheck
-|Boolean
-|Flag to control if the execution of the goal should be skipped. This parameter acts as an alias for parameter <code>skip</code>.
-|false
-|false
-|skipCheck</p>
+<p>Checks if the package.json files located in the project have the same version as the version defined in the pom.xml of the project.</p>
 </div>
+<div class="sect3">
+<h4 id="goals:check:attributes"><a class="anchor" href="#goals:check:attributes"></a><a class="link" href="#goals:check:attributes">4.2.1. Attributes</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Requires a <a href="https://maven.apache.org/">Maven</a> project to be executed.</p>
+</li>
+<li>
+<p>Binds by default to the lifecycle phase <code>verify</code>.</p>
+</li>
+<li>
+<p>The goal is thread-safe and supports parallel builds.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="goals:check:parameters"><a class="anchor" href="#goals:check:parameters"></a><a class="link" href="#goals:check:parameters">4.2.2. Parameters</a></h4>
 <div class="paragraph">
-<p>|encoding
-|String
-|The encoding in which the files are interpreted while executing this mojo.
-|false
-|${project.build.sourceEncoding}
-|encoding</p>
+<p>Parameter prefix is <code>sync-packagejson-version.check.</code></p>
 </div>
-<div class="paragraph">
-<p>|includes
-|String[]
-|List of files to include. Specified as file-set patterns which are relative to the projects root directory.
-|false
-|package.json
-|includes</p>
-</div>
-<div class="paragraph">
-<p>|excludes
-|String[]
-|List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
-|false
-|
-|excludes</p>
-</div>
-<div class="paragraph">
-<p>|failIfNoneFound
-|Boolean
-|Flag to control if the execution of the goal should fail if no package.json is found.
-|false
-|true
-|failIfNoneFound</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
+<table class="tableblock frame-none grid-all stripes-even stretch">
 <colgroup>
-<col style="width: 100%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+<col style="width: 10%;">
 </colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Mandatory</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">User property</th>
+</tr>
+</thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a id="goals:help"></a>
-== help</p>
-<p class="tableblock">Display help information on the plugin. Call <code>mvn sync-packagejson-version:help -Ddetail=true -Dgoal=&lt;goal&gt;</code> to display parameter details.</p>
-<p class="tableblock">=== Attributes</p>
-<p class="tableblock">*   The goal is thread-safe and supports parallel builds.</p>
-<p class="tableblock">=== Parameters</p>
-<p class="tableblock">Parameter prefix is <code>sync-packagejson-version.help.</code></p>
-<p class="tableblock">[frame=none,stripes=even,cols="1,1,2,1,1,1"]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">skip</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flag to control if the execution of the goal should be skipped.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">skip</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">skipCheck</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flag to control if the execution of the goal should be skipped. This parameter acts as an alias for parameter <code>skip</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">skipCheck</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">encoding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The encoding in which the files are interpreted while executing this mojo.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">${project.build.sourceEncoding}</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">encoding</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">includes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of files to include. Specified as file-set patterns which are relative to the projects root directory.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">package.json</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">includes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">excludes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String[]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">excludes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">failIfNoneFound</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Flag to control if the execution of the goal should fail if no package.json is found.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">failIfNoneFound</p></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>|Name |Type |Description |Mandatory |Default |User property</p>
 </div>
-<div class="paragraph">
-<p>|detail
-|Boolean
-|If true, display all settable properties for each goal.
-|false
-|false
-|detail</p>
 </div>
+<div class="sect2">
+<h3 id="goals:help"><a class="anchor" href="#goals:help"></a><a class="link" href="#goals:help">4.3. help</a></h3>
 <div class="paragraph">
-<p>|goal
-|String
-|The name of the goal for which to show help. If unspecified, all goals will be displayed.
-|false
-|
-|goal</p>
+<p>Display help information on the plugin. Call <code>mvn sync-packagejson-version:help -Ddetail=true -Dgoal=&lt;goal&gt;</code> to display parameter details.</p>
 </div>
+<div class="sect3">
+<h4 id="goals:help:attributes"><a class="anchor" href="#goals:help:attributes"></a><a class="link" href="#goals:help:attributes">4.3.1. Attributes</a></h4>
+<div class="ulist">
+<ul>
+<li>
+<p>The goal is thread-safe and supports parallel builds.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="goals:help:parameters"><a class="anchor" href="#goals:help:parameters"></a><a class="link" href="#goals:help:parameters">4.3.2. Parameters</a></h4>
 <div class="paragraph">
-<p>|indentSize
-|Number
-|The number of spaces per indentation level, should be positive.
-|false
-|2
-|indentSize</p>
+<p>Parameter prefix is <code>sync-packagejson-version.help.</code></p>
 </div>
-<div class="paragraph">
-<p>|lineLength
-|Number
-|The maximum length of a display line, should be positive.
-|false
-|80
-|lineLength</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
+<table class="tableblock frame-none grid-all stripes-even stretch">
 <colgroup>
-<col style="width: 100%;">
+<col style="width: 10%;">
+<col style="width: 10%;">
+<col style="width: 40%;">
+<col style="width: 10%;">
+<col style="width: 20%;">
+<col style="width: 10%;">
 </colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Mandatory</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">User property</th>
+</tr>
+</thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">:leveloffset!:
-:leveloffset: +1</p>
-<p class="tableblock"><a id="integration"></a>
-= Integration</p>
-<p class="tableblock">== Eclipse</p>
-<p class="tableblock">This plugin contains support for M2E, including lifecycle mappings and support for incremental builds in Eclipse. The <a href="#goals:check">check</a> goal support incremental builds to avoid doing unnecessary work.</p>
-<p class="tableblock">:leveloffset: 1
-:leveloffset: +1</p>
-<p class="tableblock">[license]
-= License</p>
-<p class="tableblock">This code is open source software licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0.html">Apache 2.0 License</a>.</p>
-<p class="tableblock">:leveloffset: 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">detail</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If true, display all settable properties for each goal.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">detail</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">goal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the goal for which to show help. If unspecified, all goals will be displayed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">goal</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">indentSize</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of spaces per indentation level, should be positive.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">indentSize</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lineLength</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum length of a display line, should be positive.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">80</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lineLength</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="integration"><a class="anchor" href="#integration"></a><a class="link" href="#integration">5. Integration</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="integration:eclipse"><a class="anchor" href="#integration:eclipse"></a><a class="link" href="#integration:eclipse">5.1. Eclipse</a></h3>
+<div class="paragraph">
+<p>This plugin contains support for M2E, including lifecycle mappings and support for incremental builds in Eclipse. The <a href="#goals:check">check</a> goal support incremental builds to avoid doing unnecessary work.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="license"><a class="anchor" href="#license"></a><a class="link" href="#license">License</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This code is open source software licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0.html">Apache 2.0 License</a>.</p>
 </div>
 </div>
 </div>
@@ -848,7 +915,7 @@ whether distributed in print or electronically.
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2021-09-21 16:45:02 UTC
+Last updated 2021-10-11 09:47:28 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
