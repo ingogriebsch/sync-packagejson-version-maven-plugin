@@ -104,7 +104,7 @@ class VersionValidator {
                 .append(packageJsonName) //
                 .append("' is not in sync with version '") //
                 .append(pomVersion) //
-                .append("' of the pom.xml.") //
+                .append("' of the pom.xml!") //
                 .toString();
         }
     }

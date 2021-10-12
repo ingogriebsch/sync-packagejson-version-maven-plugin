@@ -97,7 +97,7 @@ class SyncMojo extends AbstractMojo {
     }
 
     private void synchronize(String version, File baseDir, File packageJson, String encoding) {
-        VersionWriter.of(baseDir, packageJson, forName(encoding)).write(version).ifPresent(p -> logger.info(p.toString()));
+        VersionWriter.of(baseDir, packageJson, forName(encoding)).write(version).ifPresent(p -> logger.info("  " + p.toString()));
     }
 
     private static List<String> asList(String[] values) {
