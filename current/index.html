@@ -444,7 +444,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="details">
 <span id="author" class="author">Ingo Griebsch</span><br>
 <span id="revnumber">version 1.0.0-SNAPSHOT,</span>
-<span id="revdate">2021-10-11</span>
+<span id="revdate">2021-10-12</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -543,7 +543,7 @@ whether distributed in print or electronically.
 <h2 id="usage"><a class="anchor" href="#usage"></a><a class="link" href="#usage">3. Usage</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To synchronize the version of the package.json with the version of the pom.xml you need to execute the <a href="#goals:sync">sync</a> goal manually.</p>
+<p>To synchronize the version of a package.json with the version of the pom.xml you need to execute the <a href="#goals:sync">sync</a> goal manually.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -551,7 +551,7 @@ whether distributed in print or electronically.
 </div>
 </div>
 <div class="paragraph">
-<p>To check that the version of the package.json is in sync with the version of the pom.xml on a regular base, include the appropriate XML in the plugins section of your pom.xml, as shown in the following example:</p>
+<p>To check that the version of a package.json is in sync with the version of the pom.xml on a regular base, include the appropriate XML in the plugins section of your pom.xml, as shown in the following example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -604,7 +604,7 @@ whether distributed in print or electronically.
 </div>
 </div>
 <div class="paragraph">
-<p>The plugin offers a number of user properties, starting with <code>sync-packagejson-version.&lt;goal&gt;.-</code>, to let you customize the configuration from the command-line. For instance, you could disable the build from failing even though no package.json file is found as follows:</p>
+<p>The plugin offers a number of user properties, starting with <code>sync-packagejson-version.&lt;goal&gt;.-</code>, to let you customize the configuration from the command-line. For instance, you could disable the build from failing even though no package.json is found as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -633,11 +633,11 @@ whether distributed in print or electronically.
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#goals:sync">sync-packagejson-version:sync</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Synchronizes the versions of the package.json like files in the project with the version of the pom.xml.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synchronizes the versions of a package.json in the project with the version of the pom.xml.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#goals:check">sync-packagejson-version:check</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Checks if the package.json files located in the project have the same version as the version defined in the pom.xml.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Checks if a package.json located in the project has the same version as the version defined in the pom.xml.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#goals:help">sync-packagejson-version:help</a></p></td>
@@ -648,7 +648,7 @@ whether distributed in print or electronically.
 <div class="sect2">
 <h3 id="goals:sync"><a class="anchor" href="#goals:sync"></a><a class="link" href="#goals:sync">4.1. sync</a></h3>
 <div class="paragraph">
-<p>Synchronizes the versions of the package.json like files in the project with the version of the pom.xml.</p>
+<p>Synchronizes the version of a package.json in the project with the version of the pom.xml.</p>
 </div>
 <div class="sect3">
 <h4 id="goals:sync:attributes"><a class="anchor" href="#goals:sync:attributes"></a><a class="link" href="#goals:sync:attributes">4.1.1. Attributes</a></h4>
@@ -691,7 +691,7 @@ whether distributed in print or electronically.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">encoding</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The encoding in which the files are interpreted while executing this mojo.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The encoding in which the file is interpreted while executing this mojo.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">${project.build.sourceEncoding}</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">encoding</p></td>
@@ -719,7 +719,7 @@ whether distributed in print or electronically.
 <div class="sect2">
 <h3 id="goals:check"><a class="anchor" href="#goals:check"></a><a class="link" href="#goals:check">4.2. check</a></h3>
 <div class="paragraph">
-<p>Checks if the package.json files located in the project have the same version as the version defined in the pom.xml of the project.</p>
+<p>Checks if a package.json located in the project has the same version as the version defined in the pom.xml.</p>
 </div>
 <div class="sect3">
 <h4 id="goals:check:attributes"><a class="anchor" href="#goals:check:attributes"></a><a class="link" href="#goals:check:attributes">4.2.1. Attributes</a></h4>
@@ -781,7 +781,7 @@ whether distributed in print or electronically.
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">encoding</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The encoding in which the files are interpreted while executing this mojo.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The encoding in which the file is interpreted while executing this mojo.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">${project.build.sourceEncoding}</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">encoding</p></td>
@@ -915,7 +915,7 @@ whether distributed in print or electronically.
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0-SNAPSHOT<br>
-Last updated 2021-10-11 20:23:20 UTC
+Last updated 2021-10-12 15:31:58 UTC
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>
