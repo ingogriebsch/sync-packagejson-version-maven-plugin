@@ -68,7 +68,7 @@ Checks if a package.json located in the project has the same version as the vers
 === Attributes
 
 *   Requires a {apache-maven-url}[Maven] project to be executed.
-*   Binds by default to the lifecycle phase `verify`.
+*   Binds to the `verify` lifecycle phase by default.
 *   The goal is thread-safe and supports parallel builds.
 
 [[goals:check:parameters]]

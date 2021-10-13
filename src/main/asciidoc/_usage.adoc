@@ -56,7 +56,7 @@ If you use a snapshot release, you also need to add the appropriate pluginReposi
 </project>
 ----
 
-The plugin offers a number of user properties, starting with `sync-packagejson-version.<goal>.-`, to let you customize the configuration from the command-line. For instance, you could disable the build from failing even though no package.json is found as follows:
+The plugin offers a number of user properties, starting with `sync-packagejson-version.<goal>.-`, to let you customize the configuration from the command-line. For instance, you could prevent the build from failing even though no package.json file was found by running the following command:
 [source,bash,indent=0,subs="verbatim,quotes,attributes"]
 ----
 $ mvn verify -Dsync-packagejson-version.check.failIfNoneFound=false
