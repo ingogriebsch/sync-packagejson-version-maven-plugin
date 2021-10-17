@@ -103,7 +103,7 @@ class CheckMojo extends AbstractMojo {
         List<File> packageJsons = PackageJsonCollector.of(baseDir, asList(includes), asList(excludes)).collect();
 
         if (packageJsons.isEmpty()) {
-            String msg = "No package.json like file found in this project!";
+            String msg = "No package.json file found in this project!";
             if (failIfNoneFound) {
                 throw new MojoFailureException(msg);
             }
@@ -112,9 +112,9 @@ class CheckMojo extends AbstractMojo {
         }
 
         boolean singlePackageJson = packageJsons.size() == 1;
-        logger.info(format(
-            "Checking if the version of the %d found package.json like file%s %s in sync with the version of the pom.xml...",
-            packageJsons.size(), singlePackageJson ? "" : "s", singlePackageJson ? "is" : "are"));
+        logger.info(
+            format("Checking if the version of the %d found package.json file%s %s in sync with the version of the pom.xml...",
+                packageJsons.size(), singlePackageJson ? "" : "s", singlePackageJson ? "is" : "are"));
 
         String version = project.getVersion();
         List<ConstraintViolation> violations = packageJsons //
@@ -129,7 +129,7 @@ class CheckMojo extends AbstractMojo {
 
             boolean singleViolation = violations.size() == 1;
             throw new MojoFailureException(
-                format("%d package.json like file%s found in this project %s not in sync with the version of the pom.xml!",
+                format("%d package.json file%s found in this project %s not in sync with the version of the pom.xml!",
                     violations.size(), singleViolation ? "" : "s", singleViolation ? "is" : "are"));
         }
 

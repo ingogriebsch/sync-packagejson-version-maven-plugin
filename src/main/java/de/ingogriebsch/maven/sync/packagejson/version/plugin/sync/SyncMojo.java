@@ -81,13 +81,12 @@ class SyncMojo extends AbstractMojo {
         List<File> packageJsons = PackageJsonCollector.of(baseDir, asList(includes), asList(excludes)).collect();
 
         if (packageJsons.isEmpty()) {
-            throw new MojoFailureException("No package.json like file found in this project!");
+            throw new MojoFailureException("No package.json file found in this project!");
         }
 
         boolean singlePackageJson = packageJsons.size() == 1;
-        logger
-            .info(format("Synchronizing the version of the %d found package.json like file%s with the version of the pom.xml...",
-                packageJsons.size(), singlePackageJson ? "" : "s"));
+        logger.info(format("Synchronizing the version of the %d found package.json file%s with the version of the pom.xml...",
+            packageJsons.size(), singlePackageJson ? "" : "s"));
 
         String version = project.getVersion();
         packageJsons.forEach(packageJson -> synchronize(version, baseDir, packageJson, encoding));
