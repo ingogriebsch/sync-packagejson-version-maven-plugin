@@ -31,8 +31,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Synchronizes the <code>package.json</code> like files that are declared as included so that they have the same version as the
- * version of the <code>pom.xml</code>.
+ * Synchronizes the version of a <code>package.json</code> file with the version of the <code>pom.xml</code>.
  * 
  * @since 1.0.0
  */
@@ -42,7 +41,7 @@ class SyncMojo extends AbstractMojo {
     private static final String PROPERTY_PREFIX = "sync-packagejson-version.sync.";
 
     /**
-     * The encoding in which the files are interpreted while executing this mojo.
+     * The encoding in which the package.json file is interpreted while executing this mojo.
      * 
      * @since 1.0.0
      */
@@ -50,7 +49,7 @@ class SyncMojo extends AbstractMojo {
     private String encoding;
 
     /**
-     * List of files to include. Specified as file-set patterns which are relative to the projects root directory.
+     * The list of files to include. Specified as file-set patterns which are relative to the projects root directory.
      * 
      * @since 1.0.0
      */
@@ -58,7 +57,7 @@ class SyncMojo extends AbstractMojo {
     private String[] includes;
 
     /**
-     * List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
+     * The list of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
      * 
      * @since 1.0.0
      */

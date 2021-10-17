@@ -36,8 +36,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Checks that the <code>package.json</code> like files that are declared as included have the same version as the version of the
- * <code>pom.xml</code> and fails the build if not.
+ * Checks if the version of a <code>package.json</code> has the same version as the version declared in the <code>pom.xml</code>
+ * and fails the build if not.
  * 
  * @since 1.0.0
  */
@@ -63,7 +63,7 @@ class CheckMojo extends AbstractMojo {
     private boolean failIfNoneFound = true;
 
     /**
-     * The encoding in which the files are interpreted while executing this mojo.
+     * The encoding in which the package.json file is interpreted while executing this mojo.
      * 
      * @since 1.0.0
      */
@@ -71,7 +71,7 @@ class CheckMojo extends AbstractMojo {
     private String encoding;
 
     /**
-     * List of files to include. Specified as file-set patterns which are relative to the projects root directory.
+     * The list of files to include. Specified as file-set patterns which are relative to the projects root directory.
      * 
      * @since 1.0.0
      */
@@ -79,7 +79,7 @@ class CheckMojo extends AbstractMojo {
     private String[] includes;
 
     /**
-     * List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
+     * The list of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
      * 
      * @since 1.0.0
      */
