@@ -8,7 +8,7 @@
     <packaging>maven-plugin</packaging>
 
     <name>Sync package.json version Maven plugin</name>
-    <description>Synchronizes the version of a package.json with the version declared in the pom.xml.</description>
+    <description>Synchronizes the version of a package.json file with the version of the pom.xml.</description>
     <url>https://github.com/ingogriebsch/sync-packagejson-version-maven-plugin</url>
     <inceptionYear>2021</inceptionYear>
     <organization>

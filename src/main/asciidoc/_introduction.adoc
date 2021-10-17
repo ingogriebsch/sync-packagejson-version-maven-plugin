@@ -1,4 +1,4 @@
 [[introduction]]
 = Introduction
 
-This {apache-maven-url}[Maven] plugin allows you to synchronize the version declared in a pom.xml file with versions declared in one or more package.json files within the scope of a Maven project.
+This {apache-maven-url}[Maven] plugin allows you to synchronize the version of a package.json file with the version of the pom.xml.

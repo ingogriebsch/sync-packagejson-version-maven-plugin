@@ -1,17 +1,17 @@
 [[goals]]
 = Goals
 
-This plugin has the following goals:
+This plugin provides the following goals:
 
 [frame=none,stripes=even,cols="1,2"]
 |===
 |Goal |Description
 
 |<<goals:sync,sync-packagejson-version:sync>>
-|Synchronizes the versions of a package.json in the project with the version of the pom.xml.
+|Synchronizes the version of a package.json file with the version of the pom.xml.
 
 |<<goals:check,sync-packagejson-version:check>>
-|Checks if a package.json located in the project has the same version as the version defined in the pom.xml.
+|Checks if a package.json file has the same version as the version declared in the pom.xml.
 
 |<<goals:help,sync-packagejson-version:help>>
 |Display help information on the plugin. Call `mvn sync-packagejson-version:help -Ddetail=true -Dgoal=<goal>` to display parameter details.
@@ -20,7 +20,7 @@ This plugin has the following goals:
 [[goals:sync]]
 == sync
 
-Synchronizes the version of a package.json in the project with the version of the pom.xml.
+Synchronizes the version of a package.json file with the version of the pom.xml.
 
 [[goals:sync:attributes]]
 === Attributes
@@ -39,21 +39,21 @@ Parameter prefix is `sync-packagejson-version.sync.`
 
 |encoding
 |String
-|The encoding in which the file is interpreted while executing this mojo.
+|The encoding in which the package.json file is interpreted while executing this mojo.
 |false
 |${project.build.sourceEncoding}
 |encoding
 
 |includes
 |String[]
-|List of files to include. Specified as file-set patterns which are relative to the projects root directory.
+|The list of files to include. Specified as file-set patterns which are relative to the projects root directory.
 |false
 |package.json,package-lock.json
 |includes
 
 |excludes
 |String[]
-|List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
+|The list of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
 |false
 |
 |excludes
@@ -62,7 +62,7 @@ Parameter prefix is `sync-packagejson-version.sync.`
 [[goals:check]]
 == check
 
-Checks if a package.json located in the project has the same version as the version defined in the pom.xml.
+Checks if a package.json file has the same version as the version declared in the pom.xml.
 
 [[goals:check:attributes]]
 === Attributes
@@ -96,21 +96,21 @@ Parameter prefix is `sync-packagejson-version.check.`
 
 |encoding
 |String
-|The encoding in which the file is interpreted while executing this mojo.
+|The encoding in which the package.json file is interpreted while executing this mojo.
 |false
 |${project.build.sourceEncoding}
 |encoding
 
 |includes
 |String[]
-|List of files to include. Specified as file-set patterns which are relative to the projects root directory.
+|The list of files to include. Specified as file-set patterns which are relative to the projects root directory.
 |false
 |package.json,package-lock.json
 |includes
 
 |excludes
 |String[]
-|List of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
+|The list of files to exclude. Specified as file-set patterns which are relative to the projects root directory.
 |false
 |
 |excludes

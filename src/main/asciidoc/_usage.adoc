@@ -1,13 +1,13 @@
 [[usage]]
 = Usage
 
-To synchronize the version of a package.json with the version of the pom.xml you need to execute the <<goals:sync,sync>> goal manually.
+To synchronize the version of a package.json file with the version of the pom.xml you need to execute the <<goals:sync,sync>> goal manually.
 [source,bash,indent=0,subs="verbatim,quotes,attributes"]
 ----
 $ mvn sync-packagejson-version:sync
 ----
 
-To check that the version of a package.json is in sync with the version of the pom.xml on a regular base, include the appropriate XML in the plugins section of your pom.xml, as shown in the following example:
+To check if the version of a package.json file is in sync with the version of the pom.xml, include the appropriate XML in the `plugins` section of your pom.xml, as shown in the following example:
 [source,xml,indent=0,subs="verbatim,quotes,attributes"]
 ----
 <project>
@@ -34,7 +34,7 @@ To check that the version of a package.json is in sync with the version of the p
 </project>
 ----
 
-If you use a snapshot release, you also need to add the appropriate pluginRepository elements, as shown in the following listing:
+If you want to use a snapshot release, you also need to add the appropriate pluginRepository elements, as shown in the following listing:
 [source,xml,indent=0,subs="verbatim,quotes,attributes"]
 ----
 <project>

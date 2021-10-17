@@ -4,7 +4,7 @@
 [![Maven-Central](https://img.shields.io/maven-central/v/de.ingogriebsch.maven/sync-packagejson-version-maven-plugin?color=green)](https://search.maven.org/artifact/de.ingogriebsch.maven/sync-packagejson-version-maven-plugin)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-This Maven plugin allows you to synchronize the version declared in a pom.xml file with versions declared in one or more package.json files within the scope of a Maven project.
+This Maven plugin allows you to synchronize the version of a package.json file with the version of the pom.xml.
 
 ## Usage
 Please check section [Usage][sync-packagejson-version-maven-plugin-current-docs-usage] of the documentation to understand how to use this plugin in your project. 
