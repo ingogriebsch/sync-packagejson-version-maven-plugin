@@ -21,7 +21,6 @@ import static java.nio.charset.Charset.forName;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -43,8 +42,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 class SyncMojo extends AbstractMojo {
 
     private static final String PROPERTY_PREFIX = "sync-packagejson-version.sync.";
-
-    private final PomVersionEvaluatorFactory pomVersionEvaluationFactory;
 
     /**
      * The encoding in which the package.json file is interpreted while executing this mojo.
@@ -78,30 +75,25 @@ class SyncMojo extends AbstractMojo {
     @Parameter(property = PROPERTY_PREFIX + "pomVersionEvaluation", defaultValue = "runtime")
     private String pomVersionEvaluation;
 
+    @Inject
+    SyncMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
+        super(pomVersionEvaluationFactory);
+    }
+
+    /**
+     * @see AbstractMojo#getPomVersionEvaluation()
+     */
+    @Override
+    protected String getPomVersionEvaluation() {
+        return pomVersionEvaluation;
+    }
+
     /**
      * @see AbstractMojo#isSkipped()
      */
     @Override
     protected boolean isSkipped() {
         return false;
-    }
-
-    @Inject
-    SyncMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
-        this.pomVersionEvaluationFactory = pomVersionEvaluationFactory;
-    }
-
-    /**
-     * @see AbstractMojo#validate()
-     */
-    @Override
-    protected void validate() throws Exception {
-        Set<String> pomVersionEvaluations = pomVersionEvaluationFactory.getIds();
-        if (!pomVersionEvaluations.contains(pomVersionEvaluation)) {
-            throw new IllegalArgumentException(
-                format("Property 'pomVersionEvaluation' must contain one of the following values '%s' but contains value '%s'!",
-                    Arrays.toString(pomVersionEvaluations.toArray()), pomVersionEvaluation));
-        }
     }
 
     /**
@@ -120,7 +112,7 @@ class SyncMojo extends AbstractMojo {
         logger.info(format("Synchronizing the version of the %d found package.json file%s with the version of the pom.xml...",
             packageJsons.size(), singlePackageJson ? "" : "s"));
 
-        String pomVersion = pomVersionEvaluationFactory.create(pomVersionEvaluation).map(p -> p.get(project)).orElseThrow();
+        String pomVersion = evaluatePomVersion(project);
         packageJsons.forEach(packageJson -> synchronize(pomVersion, baseDir, packageJson, encoding));
 
         logger.info("Done! :)");

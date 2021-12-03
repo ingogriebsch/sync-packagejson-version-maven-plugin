@@ -39,7 +39,7 @@ class AbstractMojoTest {
             final IllegalArgumentException exception =
                 new IllegalArgumentException("Must be wrapped into a MojoExecutionException!");
             try {
-                AbstractMojo mojo = new AbstractMojo() {
+                AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
 
                     @Override
                     protected boolean isSkipped() {
@@ -53,6 +53,11 @@ class AbstractMojoTest {
 
                     @Override
                     protected void doExecute() throws MojoExecutionException, MojoFailureException {
+                    }
+
+                    @Override
+                    protected String getPomVersionEvaluation() {
+                        return "runtime";
                     }
                 };
 
@@ -72,7 +77,7 @@ class AbstractMojoTest {
             final IllegalArgumentException exception =
                 new IllegalArgumentException("Must be wrapped into a MojoExecutionException!");
             try {
-                AbstractMojo mojo = new AbstractMojo() {
+                AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
 
                     @Override
                     protected boolean isSkipped() {
@@ -82,6 +87,11 @@ class AbstractMojoTest {
                     @Override
                     protected void doExecute() throws MojoExecutionException, MojoFailureException {
                         throw exception;
+                    }
+
+                    @Override
+                    protected String getPomVersionEvaluation() {
+                        return "runtime";
                     }
                 };
 
@@ -100,7 +110,7 @@ class AbstractMojoTest {
         void should_rethrow_exception_if_mojo_execution_exception_is_thrown_by_doExecute() throws Exception {
             final MojoExecutionException exception = new MojoExecutionException("Must be wrapped rethrown!");
             try {
-                AbstractMojo mojo = new AbstractMojo() {
+                AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
 
                     @Override
                     protected boolean isSkipped() {
@@ -110,6 +120,11 @@ class AbstractMojoTest {
                     @Override
                     protected void doExecute() throws MojoExecutionException, MojoFailureException {
                         throw exception;
+                    }
+
+                    @Override
+                    protected String getPomVersionEvaluation() {
+                        return "runtime";
                     }
                 };
 
@@ -128,7 +143,7 @@ class AbstractMojoTest {
         void should_rethrow_exception_if_mojo_failure_exception_is_thrown_by_doExecute() throws Exception {
             final MojoFailureException exception = new MojoFailureException("Must be wrapped rethrown!");
             try {
-                AbstractMojo mojo = new AbstractMojo() {
+                AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
 
                     @Override
                     protected boolean isSkipped() {
@@ -138,6 +153,11 @@ class AbstractMojoTest {
                     @Override
                     protected void doExecute() throws MojoExecutionException, MojoFailureException {
                         throw exception;
+                    }
+
+                    @Override
+                    protected String getPomVersionEvaluation() {
+                        return "runtime";
                     }
                 };
 
@@ -154,7 +174,7 @@ class AbstractMojoTest {
 
         @Test
         void should_be_skipped_if_configured_explicitely() throws Exception {
-            AbstractMojo mojo = new AbstractMojo() {
+            AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
 
                 @Override
                 protected boolean isSkipped() {
@@ -165,6 +185,11 @@ class AbstractMojoTest {
                 protected void doExecute() throws MojoExecutionException, MojoFailureException {
                     fail("doExecute should never be called because the execution was marked as skipped!");
                 }
+
+                @Override
+                protected String getPomVersionEvaluation() {
+                    return "runtime";
+                }
             };
 
             mojo.setLog(mock(Log.class));
@@ -174,7 +199,7 @@ class AbstractMojoTest {
 
         @Test
         void should_be_skipped_if_packaging_is_not_supported() throws Exception {
-            AbstractMojo mojo = new AbstractMojo() {
+            AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
 
                 @Override
                 protected boolean isSkipped() {
@@ -190,6 +215,11 @@ class AbstractMojoTest {
                 protected void doExecute() throws MojoExecutionException, MojoFailureException {
                     fail("doExecute should never be called because the packaging is not supported!");
                 }
+
+                @Override
+                protected String getPomVersionEvaluation() {
+                    return "runtime";
+                }
             };
 
             mojo.setLog(mock(Log.class));
@@ -201,7 +231,7 @@ class AbstractMojoTest {
         void should_trigger_doExecute_if_not_skipped_and_packaging_is_supported() throws Exception {
             final String testMessage = "Some test message!";
 
-            AbstractMojo mojo = new AbstractMojo() {
+            AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
 
                 @Override
                 protected boolean isSkipped() {
@@ -211,6 +241,11 @@ class AbstractMojoTest {
                 @Override
                 protected void doExecute() throws MojoExecutionException, MojoFailureException {
                     logger.warn(testMessage);
+                }
+
+                @Override
+                protected String getPomVersionEvaluation() {
+                    return "runtime";
                 }
             };
 
@@ -283,7 +318,7 @@ class AbstractMojoTest {
         }
 
         private AbstractMojo mojo() {
-            AbstractMojo mojo = new AbstractMojo() {
+            AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
 
                 @Override
                 protected boolean isSkipped() {
@@ -292,6 +327,11 @@ class AbstractMojoTest {
 
                 @Override
                 protected void doExecute() throws MojoExecutionException, MojoFailureException {
+                }
+
+                @Override
+                protected String getPomVersionEvaluation() {
+                    return "runtime";
                 }
             };
             return mojo;

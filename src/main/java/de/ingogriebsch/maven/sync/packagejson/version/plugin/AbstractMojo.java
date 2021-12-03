@@ -17,6 +17,8 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin;
 
 import static java.lang.String.format;
 
+import java.util.Arrays;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,13 @@ import org.apache.maven.project.MavenProject;
  * 
  * @since 1.0.0
  */
+/**
+ * @author Ingo
+ *
+ */
 public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo {
+
+    private final PomVersionEvaluatorFactory pomVersionEvaluationFactory;
 
     /**
      * A logger that should be used instead of the log instance that is provided through Maven.
@@ -59,8 +67,9 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
      * 
      * @since 1.0.0
      */
-    protected AbstractMojo() {
-        logger = new Logger(this::getLog);
+    protected AbstractMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
+        this.pomVersionEvaluationFactory = pomVersionEvaluationFactory;
+        this.logger = new Logger(this::getLog);
     }
 
     /**
@@ -103,15 +112,6 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
     protected abstract boolean isSkipped();
 
     /**
-     * Allows the mojo to validate whatever is necessary to get validated before executing the mojo.
-     * 
-     * @throws Exception if the validation is not successful.
-     * @since 1.0.0
-     */
-    protected void validate() throws Exception {
-    }
-
-    /**
      * Executes whatever process behavior this mojo implements.
      * <p>
      * Needs to be implemented by the mojo that extends this abstract and will be executed if all previous checks do not hinder
@@ -124,6 +124,31 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
     protected abstract void doExecute() throws MojoExecutionException, MojoFailureException;
 
     /**
+     * Returns the 'pomVersionEvaluation' property configured on the concrete mojo
+     * 
+     * @return the 'pomVersionEvaluation' property configured on the concrete mojo.
+     * @since 1.1.0
+     */
+    protected abstract String getPomVersionEvaluation();
+
+    /**
+     * Allows the mojo to validate whatever is necessary to get validated before executing the mojo.
+     * 
+     * @throws Exception if the validation is not successful.
+     * @since 1.0.0
+     */
+    protected void validate() throws Exception {
+        String pomVersionEvaluation = getPomVersionEvaluation();
+        Set<String> pomVersionEvaluations = pomVersionEvaluationFactory.getIds();
+
+        if (!pomVersionEvaluations.contains(pomVersionEvaluation)) {
+            throw new IllegalArgumentException(
+                format("Property 'pomVersionEvaluation' must contain one of the following values '%s' but contains value '%s'!",
+                    Arrays.toString(pomVersionEvaluations.toArray()), pomVersionEvaluation));
+        }
+    }
+
+    /**
      * Explains if the packaging of the project the mojo is running on is supported by the mojo.
      * 
      * @param packaging the packaging of the project the mojo is running on
@@ -132,6 +157,17 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
      */
     protected boolean supportsPackaging(String packaging) {
         return true;
+    }
+
+    /**
+     * Evaluates the version of the pom.xml based on the configuration made on the concrete mojo.
+     * 
+     * @param mavenProject the Maven project to be evaluated.
+     * @return the evaluated version from the pom.xml
+     * @since 1.1.0
+     */
+    protected String evaluatePomVersion(MavenProject mavenProject) {
+        return pomVersionEvaluationFactory.create(getPomVersionEvaluation()).map(p -> p.get(project)).orElseThrow();
     }
 
     /**

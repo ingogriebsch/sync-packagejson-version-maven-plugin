@@ -25,7 +25,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -49,8 +48,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 class CheckMojo extends AbstractMojo {
 
     private static final String PROPERTY_PREFIX = "sync-packagejson-version.check.";
-
-    private final PomVersionEvaluatorFactory pomVersionEvaluationFactory;
 
     /**
      * Flag to control if the execution of the goal should be skipped.
@@ -100,30 +97,25 @@ class CheckMojo extends AbstractMojo {
     @Parameter(property = PROPERTY_PREFIX + "pomVersionEvaluation", defaultValue = "runtime")
     private String pomVersionEvaluation;
 
+    @Inject
+    CheckMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
+        super(pomVersionEvaluationFactory);
+    }
+
+    /**
+     * @see AbstractMojo#getPomVersionEvaluation()
+     */
+    @Override
+    protected String getPomVersionEvaluation() {
+        return pomVersionEvaluation;
+    }
+
     /**
      * @see AbstractMojo#isSkipped()
      */
     @Override
     protected boolean isSkipped() {
         return skip;
-    }
-
-    @Inject
-    CheckMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
-        this.pomVersionEvaluationFactory = pomVersionEvaluationFactory;
-    }
-
-    /**
-     * @see AbstractMojo#validate()
-     */
-    @Override
-    protected void validate() throws Exception {
-        Set<String> pomVersionEvaluations = pomVersionEvaluationFactory.getIds();
-        if (!pomVersionEvaluations.contains(pomVersionEvaluation)) {
-            throw new IllegalArgumentException(
-                format("Property 'pomVersionEvaluation' must contain one of the following values '%s' but contains value '%s'!",
-                    Arrays.toString(pomVersionEvaluations.toArray()), pomVersionEvaluation));
-        }
     }
 
     /**
@@ -148,7 +140,7 @@ class CheckMojo extends AbstractMojo {
             format("Checking if the version of the %d found package.json file%s %s in sync with the version of the pom.xml...",
                 packageJsons.size(), singlePackageJson ? "" : "s", singlePackageJson ? "is" : "are"));
 
-        String pomVersion = pomVersionEvaluationFactory.create(pomVersionEvaluation).map(p -> p.get(project)).orElseThrow();
+        String pomVersion = evaluatePomVersion(project);
         List<ConstraintViolation> violations = packageJsons //
             .stream() //
             .map(pj -> validate(pomVersion, baseDir, pj, encoding)) //
