@@ -26,6 +26,7 @@ import static org.mockito.Mockito.mock;
 import java.io.File;
 import java.io.IOException;
 
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PomVersionEvaluatorFactory;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.maven.plugin.MojoFailureException;
@@ -38,7 +39,7 @@ class CheckMojoTest {
 
     @Test
     void should_succeed_if_skip_is_set_to_true() {
-        CheckMojo mojo = new CheckMojo();
+        CheckMojo mojo = new CheckMojo(new PomVersionEvaluatorFactory());
         apply(mojo, "log", mock(Log.class));
         apply(mojo, "skip", true);
 
@@ -50,9 +51,10 @@ class CheckMojoTest {
         MavenProject mavenProject = mock(MavenProject.class);
         doReturn(tempDir).when(mavenProject).getBasedir();
 
-        CheckMojo mojo = new CheckMojo();
+        CheckMojo mojo = new CheckMojo(new PomVersionEvaluatorFactory());
         apply(mojo, "log", mock(Log.class));
         apply(mojo, "project", mavenProject);
+        apply(mojo, "pomVersionEvaluation", "runtime");
 
         assertThatThrownBy(() -> mojo.execute()).isInstanceOf(MojoFailureException.class);
     }
@@ -62,10 +64,11 @@ class CheckMojoTest {
         MavenProject mavenProject = mock(MavenProject.class);
         doReturn(tempDir).when(mavenProject).getBasedir();
 
-        CheckMojo mojo = new CheckMojo();
+        CheckMojo mojo = new CheckMojo(new PomVersionEvaluatorFactory());
         apply(mojo, "log", mock(Log.class));
         apply(mojo, "project", mavenProject);
         apply(mojo, "failIfNoneFound", false);
+        apply(mojo, "pomVersionEvaluation", "runtime");
 
         assertThatNoException().isThrownBy(() -> mojo.execute());
     }
@@ -81,11 +84,12 @@ class CheckMojoTest {
         doReturn(tempDir).when(mavenProject).getBasedir();
         doReturn("1.1.0-SNAPSHOT").when(mavenProject).getVersion();
 
-        CheckMojo mojo = new CheckMojo();
+        CheckMojo mojo = new CheckMojo(new PomVersionEvaluatorFactory());
         apply(mojo, "log", mock(Log.class));
         apply(mojo, "project", mavenProject);
         apply(mojo, "encoding", UTF_8.toString());
         apply(mojo, "includes", new String[] { "package.json" });
+        apply(mojo, "pomVersionEvaluation", "runtime");
 
         assertThatThrownBy(() -> mojo.execute()).isInstanceOf(MojoFailureException.class);
     }
@@ -102,11 +106,12 @@ class CheckMojoTest {
         doReturn(tempDir).when(mavenProject).getBasedir();
         doReturn(version).when(mavenProject).getVersion();
 
-        CheckMojo mojo = new CheckMojo();
+        CheckMojo mojo = new CheckMojo(new PomVersionEvaluatorFactory());
         apply(mojo, "log", mock(Log.class));
         apply(mojo, "project", mavenProject);
         apply(mojo, "encoding", UTF_8.toString());
         apply(mojo, "includes", new String[] { "package.json" });
+        apply(mojo, "pomVersionEvaluation", "runtime");
 
         assertThatNoException().isThrownBy(() -> mojo.execute());
     }

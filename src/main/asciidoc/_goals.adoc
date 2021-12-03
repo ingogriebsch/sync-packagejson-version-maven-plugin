@@ -121,6 +121,13 @@ Parameter prefix is `sync-packagejson-version.check.`
 |false
 |true
 |failIfNoneFound
+
+|pomVersionEvaluation
+|String
+|The rule how the version of the pom.xml is evaluated. Permissible values are 'runtime' and 'static'.
+|false
+|runtime
+|pomVersionEvaluation
 |===
 
 [[goals:help]]

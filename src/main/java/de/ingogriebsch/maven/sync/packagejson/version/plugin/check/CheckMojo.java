@@ -25,10 +25,14 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.inject.Inject;
 
 import com.google.inject.internal.util.Lists;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector;
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PomVersionEvaluatorFactory;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.check.VersionValidator.ConstraintViolation;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -46,6 +50,8 @@ class CheckMojo extends AbstractMojo {
 
     private static final String PROPERTY_PREFIX = "sync-packagejson-version.check.";
 
+    private final PomVersionEvaluatorFactory pomVersionEvaluationFactory;
+
     /**
      * Flag to control if the execution of the goal should be skipped.
      * 
@@ -53,14 +59,6 @@ class CheckMojo extends AbstractMojo {
      */
     @Parameter(property = PROPERTY_PREFIX + "skip", alias = "skipCheck", defaultValue = "false")
     private boolean skip = false;
-
-    /**
-     * Flag to control if the execution of the goal should fail if no package.json is found.
-     * 
-     * @since 1.0.0
-     */
-    @Parameter(property = PROPERTY_PREFIX + "failIfNoneFound", defaultValue = "true")
-    private boolean failIfNoneFound = true;
 
     /**
      * The encoding in which the package.json file is interpreted while executing this mojo.
@@ -87,11 +85,45 @@ class CheckMojo extends AbstractMojo {
     private String[] excludes;
 
     /**
+     * Flag to control if the execution of the goal should fail if no package.json is found.
+     * 
+     * @since 1.0.0
+     */
+    @Parameter(property = PROPERTY_PREFIX + "failIfNoneFound", defaultValue = "true")
+    private boolean failIfNoneFound = true;
+
+    /**
+     * The rule how the version of the pom.xml is evaluated. Permissible values are 'runtime' and 'static'.
+     * 
+     * @since 1.1.0
+     */
+    @Parameter(property = PROPERTY_PREFIX + "pomVersionEvaluation", defaultValue = "runtime")
+    private String pomVersionEvaluation;
+
+    /**
      * @see AbstractMojo#isSkipped()
      */
     @Override
     protected boolean isSkipped() {
         return skip;
+    }
+
+    @Inject
+    CheckMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
+        this.pomVersionEvaluationFactory = pomVersionEvaluationFactory;
+    }
+
+    /**
+     * @see AbstractMojo#validate()
+     */
+    @Override
+    protected void validate() throws Exception {
+        Set<String> pomVersionEvaluations = pomVersionEvaluationFactory.getIds();
+        if (!pomVersionEvaluations.contains(pomVersionEvaluation)) {
+            throw new IllegalArgumentException(
+                format("Property 'pomVersionEvaluation' must contain one of the following values '%s' but contains value '%s'!",
+                    Arrays.toString(pomVersionEvaluations.toArray()), pomVersionEvaluation));
+        }
     }
 
     /**
@@ -116,10 +148,10 @@ class CheckMojo extends AbstractMojo {
             format("Checking if the version of the %d found package.json file%s %s in sync with the version of the pom.xml...",
                 packageJsons.size(), singlePackageJson ? "" : "s", singlePackageJson ? "is" : "are"));
 
-        String version = project.getVersion();
+        String pomVersion = pomVersionEvaluationFactory.create(pomVersionEvaluation).map(p -> p.get(project)).orElseThrow();
         List<ConstraintViolation> violations = packageJsons //
             .stream() //
-            .map(pj -> validate(version, baseDir, pj, encoding)) //
+            .map(pj -> validate(pomVersion, baseDir, pj, encoding)) //
             .filter(Optional::isPresent) //
             .map(Optional::get) //
             .collect(toList());
@@ -140,8 +172,8 @@ class CheckMojo extends AbstractMojo {
         violations.forEach(v -> logger.error(v.toString()));
     }
 
-    private static Optional<ConstraintViolation> validate(String version, File baseDir, File packageJson, String encoding) {
-        return VersionValidator.of(baseDir, packageJson, Charset.forName(encoding)).validate(version);
+    private static Optional<ConstraintViolation> validate(String pomVersion, File baseDir, File packageJson, String encoding) {
+        return VersionValidator.of(baseDir, packageJson, Charset.forName(encoding)).validate(pomVersion);
     }
 
     private static List<String> asList(String[] values) {

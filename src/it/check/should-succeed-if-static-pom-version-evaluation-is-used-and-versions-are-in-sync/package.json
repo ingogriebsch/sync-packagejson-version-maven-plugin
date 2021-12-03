@@ -1,0 +1,8 @@
+{
+    "name": "some.fancy.artifact",
+    "version": "1.0.0-SNAPSHOT",
+    "private": true,
+    "scripts": {},
+    "dependencies": {},
+    "devDependencies": {}
+}
