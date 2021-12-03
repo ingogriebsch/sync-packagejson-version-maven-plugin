@@ -21,10 +21,14 @@ import static java.nio.charset.Charset.forName;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
 
 import com.google.inject.internal.util.Lists;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector;
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PomVersionEvaluatorFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -39,6 +43,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 class SyncMojo extends AbstractMojo {
 
     private static final String PROPERTY_PREFIX = "sync-packagejson-version.sync.";
+
+    private final PomVersionEvaluatorFactory pomVersionEvaluationFactory;
 
     /**
      * The encoding in which the package.json file is interpreted while executing this mojo.
@@ -65,11 +71,37 @@ class SyncMojo extends AbstractMojo {
     private String[] excludes;
 
     /**
+     * The rule how the version of the pom.xml is evaluated. Legal values are 'runtime' and 'static'.
+     * 
+     * @since 1.1.0
+     */
+    @Parameter(property = PROPERTY_PREFIX + "pomVersionEvaluation", defaultValue = "runtime")
+    private String pomVersionEvaluation;
+
+    /**
      * @see AbstractMojo#isSkipped()
      */
     @Override
     protected boolean isSkipped() {
         return false;
+    }
+
+    @Inject
+    SyncMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
+        this.pomVersionEvaluationFactory = pomVersionEvaluationFactory;
+    }
+
+    /**
+     * @see AbstractMojo#validate()
+     */
+    @Override
+    protected void validate() throws Exception {
+        Set<String> pomVersionEvaluations = pomVersionEvaluationFactory.getIds();
+        if (!pomVersionEvaluations.contains(pomVersionEvaluation)) {
+            throw new IllegalArgumentException(
+                format("Property 'pomVersionEvaluation' must contain one of the following values '%s' but contains value '%s'!",
+                    Arrays.toString(pomVersionEvaluations.toArray()), pomVersionEvaluation));
+        }
     }
 
     /**
@@ -88,14 +120,15 @@ class SyncMojo extends AbstractMojo {
         logger.info(format("Synchronizing the version of the %d found package.json file%s with the version of the pom.xml...",
             packageJsons.size(), singlePackageJson ? "" : "s"));
 
-        String version = project.getVersion();
-        packageJsons.forEach(packageJson -> synchronize(version, baseDir, packageJson, encoding));
+        String pomVersion = pomVersionEvaluationFactory.create(pomVersionEvaluation).map(p -> p.get(project)).orElseThrow();
+        packageJsons.forEach(packageJson -> synchronize(pomVersion, baseDir, packageJson, encoding));
 
         logger.info("Done! :)");
     }
 
-    private void synchronize(String version, File baseDir, File packageJson, String encoding) {
-        VersionWriter.of(baseDir, packageJson, forName(encoding)).write(version).ifPresent(p -> logger.info("  " + p.toString()));
+    private void synchronize(String pomVersion, File baseDir, File packageJson, String encoding) {
+        VersionWriter.of(baseDir, packageJson, forName(encoding)).write(pomVersion)
+            .ifPresent(p -> logger.info("  " + p.toString()));
     }
 
     private static List<String> asList(String[] values) {

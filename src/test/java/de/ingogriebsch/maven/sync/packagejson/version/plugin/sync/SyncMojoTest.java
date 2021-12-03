@@ -26,6 +26,7 @@ import static org.mockito.Mockito.mock;
 import java.io.File;
 import java.io.IOException;
 
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PomVersionEvaluatorFactory;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.maven.plugin.MojoFailureException;
@@ -41,9 +42,10 @@ class SyncMojoTest {
         MavenProject mavenProject = mock(MavenProject.class);
         doReturn(tempDir).when(mavenProject).getBasedir();
 
-        SyncMojo mojo = new SyncMojo();
+        SyncMojo mojo = new SyncMojo(new PomVersionEvaluatorFactory());
         apply(mojo, "log", mock(Log.class));
         apply(mojo, "project", mavenProject);
+        apply(mojo, "pomVersionEvaluation", "runtime");
 
         assertThatThrownBy(() -> mojo.execute()).isInstanceOf(MojoFailureException.class);
     }
@@ -60,11 +62,12 @@ class SyncMojoTest {
         doReturn(tempDir).when(mavenProject).getBasedir();
         doReturn(version).when(mavenProject).getVersion();
 
-        SyncMojo mojo = new SyncMojo();
+        SyncMojo mojo = new SyncMojo(new PomVersionEvaluatorFactory());
         apply(mojo, "log", mock(Log.class));
         apply(mojo, "project", mavenProject);
         apply(mojo, "encoding", UTF_8.toString());
         apply(mojo, "includes", new String[] { "package.json" });
+        apply(mojo, "pomVersionEvaluation", "runtime");
 
         assertThatNoException().isThrownBy(() -> mojo.execute());
     }
