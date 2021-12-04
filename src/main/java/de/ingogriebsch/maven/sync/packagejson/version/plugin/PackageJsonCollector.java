@@ -18,7 +18,7 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
-import static com.google.inject.internal.util.Lists.newArrayList;
+import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.File;
 import java.util.List;
