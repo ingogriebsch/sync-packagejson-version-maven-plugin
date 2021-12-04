@@ -50,7 +50,7 @@ jobs:
 
       - name: Deploy artifacts
         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
-        run: mvn -B -Pintegration-tests,ossrh deploy
+        run: mvn -e -B -Pintegration-tests,ossrh deploy
 
       - name: Prepare Sonar cache
         # https://github.com/actions/cache
