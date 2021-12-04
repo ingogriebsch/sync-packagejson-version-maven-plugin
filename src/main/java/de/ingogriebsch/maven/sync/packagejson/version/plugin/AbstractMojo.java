@@ -65,6 +65,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
      * <p>
      * Needs to be called by the classes that extend this class.
      * 
+     * @param pomVersionEvaluationFactory the factory instance that should be used to evaluate the version of the pom.xml
      * @since 1.0.0
      */
     protected AbstractMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
