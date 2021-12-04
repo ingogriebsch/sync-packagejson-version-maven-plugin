@@ -4,6 +4,8 @@ updates:
   # Maintain dependencies for Maven
   - package-ecosystem: maven
     directory: "/"
+    ignore:
+    - dependency-name: "maven.version"
     labels:
       - "infrastructure:dependencies"
       - "type:improvement"
