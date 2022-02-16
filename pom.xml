@@ -46,7 +46,7 @@
     <properties>
         <doc.source.directory>${project.build.directory}/doc-sources</doc.source.directory>
         <doc.target.directory>${project.build.directory}/generated-docs</doc.target.directory>
-        <jackson.version>2.13.0</jackson.version>
+        <jackson.version>2.13.1</jackson.version>
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -215,7 +215,7 @@
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.6.8</version>
+                    <version>1.6.11</version>
                 </plugin>
                 <plugin>
                     <groupId>net.revelc.code</groupId>
