@@ -23,6 +23,7 @@ import static org.apache.commons.io.FileUtils.writeStringToFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.InstanceOfAssertFactories.map;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,5 +69,54 @@ class VersionWriterTest {
 
         VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
         assertThatThrownBy(() -> validator.write("1.2.3-SNAPSHOT")).isInstanceOf(IOException.class);
+    }
+
+    @Test
+    void should_only_write_top_level_version_if_single_line_content(@TempDir File tempDir) throws Exception {
+        String content = "{\"version\": \"1.0.0\", \"dependencies\": {\"version\": \"2.0.0\"}}";
+
+        File packageJson = new File(tempDir, "package.json");
+        writeStringToFile(packageJson, content, UTF_8);
+
+        String version = "1.2.3-SNAPSHOT";
+        VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
+        assertThatNoException().isThrownBy(() -> validator.write(version));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> json = objectMapper.readValue(packageJson, objectMapper.constructType(Map.class));
+
+        assertThat(json).containsEntry("version", version);
+
+        assertThat(json.get("dependencies")) //
+            .asInstanceOf(map(String.class, Object.class)) //
+            .containsEntry("version", "2.0.0");
+    }
+
+    @Test
+    void should_only_write_top_level_version_if_multi_line_content(@TempDir File tempDir) throws Exception {
+        // @formatter:off
+        String content = "{\r\n"
+                + "    \"version\": \"1.0.0\",\r\n"
+                + "    \"dependencies\": {\r\n"
+                + "        \"version\": \"2.0.0\"\r\n"
+                + "    }\r\n"
+                + "}\r\n";
+        // @formatter:on
+
+        File packageJson = new File(tempDir, "package.json");
+        writeStringToFile(packageJson, content, UTF_8);
+
+        String version = "1.2.3-SNAPSHOT";
+        VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
+        assertThatNoException().isThrownBy(() -> validator.write(version));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> json = objectMapper.readValue(packageJson, objectMapper.constructType(Map.class));
+
+        assertThat(json).containsEntry("version", version);
+
+        assertThat(json.get("dependencies")) //
+            .asInstanceOf(map(String.class, Object.class)) //
+            .containsEntry("version", "2.0.0");
     }
 }
