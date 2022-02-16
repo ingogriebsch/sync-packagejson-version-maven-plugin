@@ -7,23 +7,23 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.13.3"
+    "dep1": "^4.13.3"
   },
   "engines": {
     "node": "4.0.0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/heroku/node-js-sample"
+    "url": "http://localhost"
   },
   "keywords": [
     "node",
     "heroku",
     "express"
   ],
-  "author": "Mark Pundsack",
+  "author": "John Doe",
   "contributors": [
-    "Zeke Sikelianos <zeke@sikelianos.com> (http://zeke.sikelianos.com)"
+    "Jane Doe"
   ],
   "license": "MIT"
 }
