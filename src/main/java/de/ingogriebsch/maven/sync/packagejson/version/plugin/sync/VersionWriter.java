@@ -44,7 +44,7 @@ import org.apache.commons.io.FileUtils;
 @Value(staticConstructor = "of")
 class VersionWriter {
 
-    private static final Pattern pattern = Pattern.compile("^.*?\"version\"\\s?:\\s?\"(.+?)\".*?$", DOTALL);
+    private static final Pattern pattern = Pattern.compile("^.*?\"version\"\\s?:\\s?\"(.+?)\".*$", DOTALL);
     private static final ObjectMapper objectMapper = objectMapper();
 
     File baseDir;
