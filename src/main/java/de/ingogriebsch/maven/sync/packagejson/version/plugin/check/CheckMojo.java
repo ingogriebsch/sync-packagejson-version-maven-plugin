@@ -28,7 +28,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import com.google.inject.internal.util.Lists;
+import com.google.common.collect.Lists;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.PomVersionEvaluatorFactory;
