@@ -47,6 +47,14 @@ class CheckMojo extends AbstractMojo {
     private static final String PROPERTY_PREFIX = "sync-packagejson-version.check.";
 
     /**
+     * The validator instance that should be used to validate if the version of the <code>package.json</code> like files match
+     * against the version of the pom.xml.
+     * 
+     * @since 1.2.0
+     */
+    private final VersionValidator versionValidator;
+
+    /**
      * Flag to control if the execution of the goal should be skipped.
      * 
      * @since 1.0.0
@@ -94,6 +102,10 @@ class CheckMojo extends AbstractMojo {
     @Parameter(property = PROPERTY_PREFIX + "pomVersionEvaluation", defaultValue = "runtime")
     private String pomVersionEvaluation;
 
+    CheckMojo() {
+        versionValidator = new VersionValidator(logger);
+    }
+
     /**
      * @see AbstractMojo#getPomVersionEvaluation()
      */
@@ -135,8 +147,7 @@ class CheckMojo extends AbstractMojo {
         List<ConstraintViolation> violations = packageJsons //
             .stream() //
             .map(pj -> validate(pomVersion, baseDir, pj, encoding)) //
-            .filter(Optional::isPresent) //
-            .map(Optional::get) //
+            .flatMap(Optional::stream) //
             .collect(toList());
 
         if (!violations.isEmpty()) {
@@ -155,7 +166,7 @@ class CheckMojo extends AbstractMojo {
         violations.forEach(v -> logger.error(v.toString()));
     }
 
-    private static Optional<ConstraintViolation> validate(String pomVersion, File baseDir, File packageJson, String encoding) {
-        return VersionValidator.of(baseDir, packageJson, Charset.forName(encoding)).validate(pomVersion);
+    private Optional<ConstraintViolation> validate(String pomVersion, File baseDir, File packageJson, String encoding) {
+        return versionValidator.validate(pomVersion, baseDir, packageJson, Charset.forName(encoding));
     }
 }

@@ -17,12 +17,14 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import static de.ingogriebsch.maven.sync.packagejson.version.plugin.Logger.noOpLogger;
 import static org.apache.commons.io.FileUtils.writeStringToFile;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.check.VersionValidator.ConstraintViolation;
 import org.junit.jupiter.api.Nested;
@@ -37,8 +39,10 @@ class VersionValidatorTest {
         File packageJson = new File(tempDir, "package.json");
         writeStringToFile(packageJson, "{\"version\": \"" + version + "\"}", UTF_8);
 
-        VersionValidator validator = VersionValidator.of(tempDir, packageJson, UTF_8);
-        assertThat(validator.validate(version)).isEmpty();
+        VersionValidator validator = new VersionValidator(noOpLogger());
+        Optional<ConstraintViolation> violation = validator.validate(version, tempDir, packageJson, UTF_8);
+
+        assertThat(violation).isEmpty();
     }
 
     @Test
@@ -48,9 +52,10 @@ class VersionValidatorTest {
         String packageJsonVersion = "1.2.4-SNAPSHOT";
         writeStringToFile(packageJson, "{\"version\": \"" + packageJsonVersion + "\"}", UTF_8);
 
-        VersionValidator validator = VersionValidator.of(tempDir, packageJson, UTF_8);
+        VersionValidator validator = new VersionValidator(noOpLogger());
+        Optional<ConstraintViolation> violation = validator.validate(pomVersion, tempDir, packageJson, UTF_8);
 
-        assertThat(validator.validate(pomVersion)).isNotEmpty();
+        assertThat(violation).isNotEmpty();
     }
 
     @Test
@@ -58,8 +63,9 @@ class VersionValidatorTest {
         File packageJson = new File(tempDir, "package.json");
         writeStringToFile(packageJson, "some content", UTF_8);
 
-        VersionValidator validator = VersionValidator.of(tempDir, packageJson, UTF_8);
-        assertThatThrownBy(() -> validator.validate("1.2.3-SNAPSHOT")).isInstanceOf(IOException.class);
+        VersionValidator validator = new VersionValidator(noOpLogger());
+        assertThatThrownBy(() -> validator.validate("1.2.3-SNAPSHOT", tempDir, packageJson, UTF_8))
+            .isInstanceOf(IOException.class);
     }
 
     @Nested
