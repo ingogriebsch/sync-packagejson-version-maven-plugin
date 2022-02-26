@@ -22,12 +22,11 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.google.common.collect.Lists;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector;
-import de.ingogriebsch.maven.sync.packagejson.version.plugin.PomVersionEvaluatorFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -38,6 +37,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  * 
  * @since 1.0.0
  */
+@Singleton
 @Mojo(name = "sync", requiresProject = true, requiresDirectInvocation = true)
 class SyncMojo extends AbstractMojo {
 
@@ -75,11 +75,6 @@ class SyncMojo extends AbstractMojo {
     @Parameter(property = PROPERTY_PREFIX + "pomVersionEvaluation", defaultValue = "runtime")
     private String pomVersionEvaluation;
 
-    @Inject
-    SyncMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
-        super(pomVersionEvaluationFactory);
-    }
-
     /**
      * @see AbstractMojo#getPomVersionEvaluation()
      */
@@ -109,8 +104,9 @@ class SyncMojo extends AbstractMojo {
         }
 
         boolean singlePackageJson = packageJsons.size() == 1;
-        logger.info(format("Synchronizing the version of the %d found package.json file%s with the version of the pom.xml...",
-            packageJsons.size(), singlePackageJson ? "" : "s"));
+        logger.info(format(
+            "Synchronizing the version of the %d found package.json file%s with the version of the pom.xml [using '%s' evaluation]...",
+            packageJsons.size(), singlePackageJson ? "" : "s", pomVersionEvaluation));
 
         String pomVersion = evaluatePomVersion(project);
         packageJsons.forEach(packageJson -> synchronize(pomVersion, baseDir, packageJson, encoding));

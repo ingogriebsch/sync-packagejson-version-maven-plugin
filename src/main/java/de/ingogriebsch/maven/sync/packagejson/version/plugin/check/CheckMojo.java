@@ -26,12 +26,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.google.common.collect.Lists;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector;
-import de.ingogriebsch.maven.sync.packagejson.version.plugin.PomVersionEvaluatorFactory;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.check.VersionValidator.ConstraintViolation;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -44,6 +43,7 @@ import org.apache.maven.plugins.annotations.Parameter;
  * 
  * @since 1.0.0
  */
+@Singleton
 @Mojo(name = "check", defaultPhase = VERIFY, requiresProject = true, threadSafe = true)
 class CheckMojo extends AbstractMojo {
 
@@ -97,11 +97,6 @@ class CheckMojo extends AbstractMojo {
     @Parameter(property = PROPERTY_PREFIX + "pomVersionEvaluation", defaultValue = "runtime")
     private String pomVersionEvaluation;
 
-    @Inject
-    CheckMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
-        super(pomVersionEvaluationFactory);
-    }
-
     /**
      * @see AbstractMojo#getPomVersionEvaluation()
      */
@@ -136,9 +131,9 @@ class CheckMojo extends AbstractMojo {
         }
 
         boolean singlePackageJson = packageJsons.size() == 1;
-        logger.info(
-            format("Checking if the version of the %d found package.json file%s %s in sync with the version of the pom.xml...",
-                packageJsons.size(), singlePackageJson ? "" : "s", singlePackageJson ? "is" : "are"));
+        logger.info(format(
+            "Checking if the version of the %d found package.json file%s %s in sync with the version of the pom.xml [using '%s' evaluation]...",
+            packageJsons.size(), singlePackageJson ? "" : "s", singlePackageJson ? "is" : "are", pomVersionEvaluation));
 
         String pomVersion = evaluatePomVersion(project);
         List<ConstraintViolation> violations = packageJsons //

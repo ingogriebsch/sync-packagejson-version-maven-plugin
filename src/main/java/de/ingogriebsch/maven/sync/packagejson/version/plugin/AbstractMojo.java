@@ -19,12 +19,9 @@ import static java.lang.String.format;
 
 import java.util.Arrays;
 import java.util.Set;
-import java.util.function.Supplier;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
@@ -43,6 +40,11 @@ import org.apache.maven.project.MavenProject;
  */
 public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo {
 
+    /**
+     * The factory instance that should be used to evaluate the version of the pom.xml.
+     * 
+     * @since 1.0.0
+     */
     private final PomVersionEvaluatorFactory pomVersionEvaluationFactory;
 
     /**
@@ -65,12 +67,11 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
      * <p>
      * Needs to be called by the classes that extend this class.
      * 
-     * @param pomVersionEvaluationFactory the factory instance that should be used to evaluate the version of the pom.xml
      * @since 1.0.0
      */
-    protected AbstractMojo(PomVersionEvaluatorFactory pomVersionEvaluationFactory) {
-        this.pomVersionEvaluationFactory = pomVersionEvaluationFactory;
-        this.logger = new Logger(this::getLog);
+    protected AbstractMojo() {
+        this.logger = Logger.logger(this::getLog);
+        this.pomVersionEvaluationFactory = new PomVersionEvaluatorFactory(logger);
     }
 
     /**
@@ -169,76 +170,5 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
      */
     protected String evaluatePomVersion(MavenProject mavenProject) {
         return pomVersionEvaluationFactory.create(getPomVersionEvaluation()).map(p -> p.get(project)).orElseThrow();
-    }
-
-    /**
-     * A Logger SPI that provides some convenience methods to ease the logging of messages.
-     *
-     * @since 1.0.0
-     */
-    @RequiredArgsConstructor
-    protected static class Logger {
-
-        private final Supplier<Log> source;
-
-        /**
-         * Replaces the placeholders in the message based on the given arguments and logs the message on debug level (if enabled).
-         *
-         * @param message the message that will be logged if the log level is enabled
-         * @param args the arguments that will be used as replacements for the placeholders in the message before logging the
-         *        message
-         * @since 1.0.0
-         */
-        public void debug(String message, Object... args) {
-            Log log = source.get();
-            if (log.isDebugEnabled()) {
-                log.debug(format(message, args));
-            }
-        }
-
-        /**
-         * Replaces the placeholders in the message based on the given arguments and logs the message on info level (if enabled).
-         *
-         * @param message the message that will be logged if the log level is enabled
-         * @param args the arguments that will be used as replacements for the placeholders in the message before logging the
-         *        message
-         * @since 1.0.0
-         */
-        public void info(String message, Object... args) {
-            Log log = source.get();
-            if (log.isInfoEnabled()) {
-                log.info(format(message, args));
-            }
-        }
-
-        /**
-         * Replaces the placeholders in the message based on the given arguments and logs the message on warn level (if enabled).
-         *
-         * @param message the message that will be logged if the log level is enabled
-         * @param args the arguments that will be used as replacements for the placeholders in the message before logging the
-         *        message
-         * @since 1.0.0
-         */
-        public void warn(String message, Object... args) {
-            Log log = source.get();
-            if (log.isWarnEnabled()) {
-                log.warn(format(message, args));
-            }
-        }
-
-        /**
-         * Replaces the placeholders in the message based on the given arguments and logs the message on error level (if enabled).
-         *
-         * @param message the message that will be logged if the log level is enabled
-         * @param args the arguments that will be used as replacements for the placeholders in the message before logging the
-         *        message
-         * @since 1.0.0
-         */
-        public void error(String message, Object... args) {
-            Log log = source.get();
-            if (log.isErrorEnabled()) {
-                log.error(format(message, args));
-            }
-        }
     }
 }

@@ -1,5 +1,6 @@
 package de.ingogriebsch.maven.sync.packagejson.version.plugin;
 
+import static de.ingogriebsch.maven.sync.packagejson.version.plugin.Logger.noOpLogger;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.apache.maven.project.MavenProject;
@@ -12,6 +13,9 @@ class RuntimePomVersionEvaluatorTest {
         MavenProject mavenProject = new MavenProject();
         mavenProject.setVersion("1.0.1-SNAPSHOT");
 
-        assertThat(new RuntimePomVersionEvaluator().get(mavenProject)).isEqualTo(mavenProject.getVersion());
+        RuntimePomVersionEvaluator evaluator = new RuntimePomVersionEvaluator(noOpLogger());
+        String version = evaluator.get(mavenProject);
+
+        assertThat(version).isEqualTo(mavenProject.getVersion());
     }
 }

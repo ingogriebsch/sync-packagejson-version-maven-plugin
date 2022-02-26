@@ -39,7 +39,7 @@ class AbstractMojoTest {
             final IllegalArgumentException exception =
                 new IllegalArgumentException("Must be wrapped into a MojoExecutionException!");
             try {
-                AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
+                AbstractMojo mojo = new AbstractMojo() {
 
                     @Override
                     protected boolean isSkipped() {
@@ -77,7 +77,7 @@ class AbstractMojoTest {
             final IllegalArgumentException exception =
                 new IllegalArgumentException("Must be wrapped into a MojoExecutionException!");
             try {
-                AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
+                AbstractMojo mojo = new AbstractMojo() {
 
                     @Override
                     protected boolean isSkipped() {
@@ -110,7 +110,7 @@ class AbstractMojoTest {
         void should_rethrow_exception_if_mojo_execution_exception_is_thrown_by_doExecute() throws Exception {
             final MojoExecutionException exception = new MojoExecutionException("Must be wrapped rethrown!");
             try {
-                AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
+                AbstractMojo mojo = new AbstractMojo() {
 
                     @Override
                     protected boolean isSkipped() {
@@ -143,7 +143,7 @@ class AbstractMojoTest {
         void should_rethrow_exception_if_mojo_failure_exception_is_thrown_by_doExecute() throws Exception {
             final MojoFailureException exception = new MojoFailureException("Must be wrapped rethrown!");
             try {
-                AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
+                AbstractMojo mojo = new AbstractMojo() {
 
                     @Override
                     protected boolean isSkipped() {
@@ -174,7 +174,7 @@ class AbstractMojoTest {
 
         @Test
         void should_be_skipped_if_configured_explicitely() throws Exception {
-            AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
+            AbstractMojo mojo = new AbstractMojo() {
 
                 @Override
                 protected boolean isSkipped() {
@@ -199,7 +199,7 @@ class AbstractMojoTest {
 
         @Test
         void should_be_skipped_if_packaging_is_not_supported() throws Exception {
-            AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
+            AbstractMojo mojo = new AbstractMojo() {
 
                 @Override
                 protected boolean isSkipped() {
@@ -231,7 +231,7 @@ class AbstractMojoTest {
         void should_trigger_doExecute_if_not_skipped_and_packaging_is_supported() throws Exception {
             final String testMessage = "Some test message!";
 
-            AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
+            AbstractMojo mojo = new AbstractMojo() {
 
                 @Override
                 protected boolean isSkipped() {
@@ -318,7 +318,7 @@ class AbstractMojoTest {
         }
 
         private AbstractMojo mojo() {
-            AbstractMojo mojo = new AbstractMojo(new PomVersionEvaluatorFactory()) {
+            AbstractMojo mojo = new AbstractMojo() {
 
                 @Override
                 protected boolean isSkipped() {

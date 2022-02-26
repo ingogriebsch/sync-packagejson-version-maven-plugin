@@ -2,36 +2,44 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin;
 
 import static java.util.Collections.unmodifiableSet;
 
+import static com.google.common.collect.Maps.newHashMap;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
-import javax.inject.Singleton;
-
-import com.google.common.collect.Maps;
 
 /**
  * A factory that creates a {@link PomVersionEvaluator} based on a given identifier.
  * 
  * @since 1.1.0
  */
-@Singleton
 public class PomVersionEvaluatorFactory {
 
-    private static final Map<String, PomVersionEvaluator> evaluators = providers();
+    private final Map<String, PomVersionEvaluator> evaluators;
+    private final Logger logger;
+
+    PomVersionEvaluatorFactory(Logger logger) {
+        this.logger = logger;
+        this.evaluators = initEvaluators();
+    }
 
     public Optional<PomVersionEvaluator> create(String id) {
-        return Optional.ofNullable(evaluators.get(id));
+        PomVersionEvaluator evaluator = evaluators.get(id);
+        logger.debug("Created a pom-version-evaluator instance based on id '%s' [type: '%s].", id,
+            evaluator != null ? evaluator.getClass().getName() : null);
+        return Optional.ofNullable(evaluator);
     }
 
     public Set<String> getIds() {
-        return unmodifiableSet(evaluators.keySet());
+        Set<String> ids = unmodifiableSet(evaluators.keySet());
+        logger.debug("Returning ids %s to identify the available pom-version-evaluator instances.", ids);
+        return ids;
     }
 
-    private static Map<String, PomVersionEvaluator> providers() {
-        Map<String, PomVersionEvaluator> providers = Maps.newHashMap();
-        providers.put("runtime", new RuntimePomVersionEvaluator());
-        providers.put("static", new StaticPomVersionEvaluator());
-        return providers;
+    private Map<String, PomVersionEvaluator> initEvaluators() {
+        Map<String, PomVersionEvaluator> evaluators = newHashMap();
+        evaluators.put("runtime", new RuntimePomVersionEvaluator(logger));
+        evaluators.put("static", new StaticPomVersionEvaluator(logger));
+        return evaluators;
     }
 }

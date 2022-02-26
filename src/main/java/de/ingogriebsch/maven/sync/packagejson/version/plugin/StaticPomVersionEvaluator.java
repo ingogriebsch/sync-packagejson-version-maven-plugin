@@ -5,6 +5,7 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 import java.io.IOException;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.Value;
 import org.apache.maven.project.MavenProject;
@@ -17,9 +18,11 @@ import org.apache.maven.project.MavenProject;
  * @since 1.1.0
  *
  */
+@RequiredArgsConstructor
 class StaticPomVersionEvaluator implements PomVersionEvaluator {
 
     private static final XmlMapper xmlMapper = xmlMapper();
+    private final Logger logger;
 
     @Override
     @SneakyThrows(IOException.class)
@@ -27,12 +30,14 @@ class StaticPomVersionEvaluator implements PomVersionEvaluator {
         Project project = xmlMapper.readValue(mavenProject.getFile(), Project.class);
 
         String version = project.getVersion();
-        if (version != null) {
-            return version;
+        if (version == null) {
+            logger.debug("Version of the projects pom not given, therefore falling back to the version of the parent...");
+            Project.Parent parent = project.getParent();
+            version = parent != null ? parent.getVersion() : null;
         }
 
-        Project.Parent parent = project.getParent();
-        return parent != null ? parent.getVersion() : null;
+        logger.debug("Evaluated [in a static way] version '%s'.", version);
+        return version;
     }
 
     private static XmlMapper xmlMapper() {
