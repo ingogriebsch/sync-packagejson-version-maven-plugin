@@ -17,6 +17,7 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin.sync;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import static de.ingogriebsch.maven.sync.packagejson.version.plugin.Logger.noOpLogger;
 import static org.apache.commons.io.FileUtils.copyFile;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.apache.commons.io.FileUtils.writeStringToFile;
@@ -41,8 +42,8 @@ class VersionWriterTest {
         File packageJson = new File(tempDir, "package.json");
         writeStringToFile(packageJson, "{\"version\": \"1.0.0\"}", UTF_8);
 
-        VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
-        assertThatNoException().isThrownBy(() -> validator.write(version));
+        VersionWriter validator = new VersionWriter(noOpLogger());
+        assertThatNoException().isThrownBy(() -> validator.write(version, tempDir, packageJson, UTF_8));
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> json = objectMapper.readValue(packageJson, objectMapper.constructType(Map.class));
@@ -55,8 +56,8 @@ class VersionWriterTest {
         copyFile(new File(VersionWriterTest.class.getResource("versionWriter/package.json").toURI()), packageJson);
         String contentBefore = readFileToString(packageJson, UTF_8);
 
-        VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
-        assertThatNoException().isThrownBy(() -> validator.write("0.2.0"));
+        VersionWriter validator = new VersionWriter(noOpLogger());
+        assertThatNoException().isThrownBy(() -> validator.write("0.2.0", tempDir, packageJson, UTF_8));
 
         String contentAfter = readFileToString(packageJson, UTF_8);
         assertThat(contentBefore).isEqualTo(contentAfter);
@@ -67,8 +68,8 @@ class VersionWriterTest {
         File packageJson = new File(tempDir, "package.json");
         writeStringToFile(packageJson, "some content", UTF_8);
 
-        VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
-        assertThatThrownBy(() -> validator.write("1.2.3-SNAPSHOT")).isInstanceOf(IOException.class);
+        VersionWriter validator = new VersionWriter(noOpLogger());
+        assertThatThrownBy(() -> validator.write("1.2.3-SNAPSHOT", tempDir, packageJson, UTF_8)).isInstanceOf(IOException.class);
     }
 
     @Test
@@ -79,8 +80,8 @@ class VersionWriterTest {
         writeStringToFile(packageJson, content, UTF_8);
 
         String version = "1.2.3-SNAPSHOT";
-        VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
-        assertThatNoException().isThrownBy(() -> validator.write(version));
+        VersionWriter validator = new VersionWriter(noOpLogger());
+        assertThatNoException().isThrownBy(() -> validator.write(version, tempDir, packageJson, UTF_8));
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> json = objectMapper.readValue(packageJson, objectMapper.constructType(Map.class));
@@ -107,8 +108,8 @@ class VersionWriterTest {
         writeStringToFile(packageJson, content, UTF_8);
 
         String version = "1.2.3-SNAPSHOT";
-        VersionWriter validator = VersionWriter.of(tempDir, packageJson, UTF_8);
-        assertThatNoException().isThrownBy(() -> validator.write(version));
+        VersionWriter validator = new VersionWriter(noOpLogger());
+        assertThatNoException().isThrownBy(() -> validator.write(version, tempDir, packageJson, UTF_8));
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> json = objectMapper.readValue(packageJson, objectMapper.constructType(Map.class));

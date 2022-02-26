@@ -41,6 +41,13 @@ class SyncMojo extends AbstractMojo {
     private static final String PROPERTY_PREFIX = "sync-packagejson-version.sync.";
 
     /**
+     * The writer that is used to write the version of the <code>package.json</code>.
+     * 
+     * @since 1.2.0
+     */
+    private final VersionWriter versionWriter;
+
+    /**
      * The encoding in which the package.json file is interpreted while executing this mojo.
      * 
      * @since 1.0.0
@@ -71,6 +78,10 @@ class SyncMojo extends AbstractMojo {
      */
     @Parameter(property = PROPERTY_PREFIX + "pomVersionEvaluation", defaultValue = "runtime")
     private String pomVersionEvaluation;
+
+    SyncMojo() {
+        versionWriter = new VersionWriter(logger);
+    }
 
     /**
      * @see AbstractMojo#getPomVersionEvaluation()
@@ -111,7 +122,6 @@ class SyncMojo extends AbstractMojo {
     }
 
     private void synchronize(String pomVersion, File baseDir, File packageJson, String encoding) {
-        VersionWriter.of(baseDir, packageJson, forName(encoding)).write(pomVersion)
-            .ifPresent(p -> logger.info("  " + p.toString()));
+        versionWriter.write(pomVersion, baseDir, packageJson, forName(encoding)).ifPresent(p -> logger.info("  " + p.toString()));
     }
 }

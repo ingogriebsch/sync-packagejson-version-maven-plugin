@@ -15,7 +15,7 @@
  */
 package de.ingogriebsch.maven.sync.packagejson.version.plugin.sync;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.io.File.separator;
 import static java.util.Optional.empty;
 import static java.util.regex.Pattern.DOTALL;
 
@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.Logger;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.Value;
@@ -41,50 +42,55 @@ import org.apache.commons.io.FileUtils;
  * 
  * @since 1.0.0
  */
-@Value(staticConstructor = "of")
 class VersionWriter {
 
     private static final Pattern pattern = Pattern.compile("^.*?\"version\"\\s?:\\s?\"(.+?)\".*$", DOTALL);
     private static final ObjectMapper objectMapper = objectMapper();
+    private final Logger logger;
 
-    File baseDir;
-    File file;
-    Charset encoding;
+    VersionWriter(Logger logger) {
+        this.logger = logger;
+    }
 
     /**
      * Writes the version to the given file.
      * 
-     * @param version the version that should be written to the file
+     * @param pomVersion the version that should be written to the file
      * @return an {@link Optional} that is either empty (if the version is already the same as the version in the pom.xml) or
      *         contains a {@link Protocol} (if the version needs to be synchronized).
+     * @param baseDir the directory that is used as the root of the folder and file structure.
+     * @param file the <code>package.json</code> like file that is validated.
+     * @param encoding the encoding of the <code>package.json</code> like file.
      * @since 1.0.0
      */
     @SneakyThrows(IOException.class)
-    Optional<Protocol> write(String version) {
-        if (version.equals(extractVersion(file, encoding))) {
+    Optional<Protocol> write(String pomVersion, File baseDir, File file, Charset encoding) {
+        String name = relativeName(file, baseDir);
+
+        String packageJsonVersion = extractVersion(file, encoding);
+        if (packageJsonVersion.equals(pomVersion)) {
+            logger.debug("Version of the package.json '%s' is the same as of the pom.xml, therefore returning.", name);
             return empty();
         }
 
-        String content = FileUtils.readFileToString(file, UTF_8);
-        Matcher matcher = pattern.matcher(content);
+        String packageJsonContent = FileUtils.readFileToString(file, encoding);
+        Matcher matcher = pattern.matcher(packageJsonContent);
         if (!matcher.matches() || matcher.groupCount() != 1) {
+            logger.debug("No version found in package.json '%s', therefore returning.", name);
             return empty();
         }
 
-        content = new StringBuilder(content) //
-            .replace(matcher.start(1), matcher.end(1), version) //
+        logger.debug("Replacing the version in package.json '%s' with version '%s'.", name, pomVersion);
+        packageJsonContent = new StringBuilder(packageJsonContent) //
+            .replace(matcher.start(1), matcher.end(1), pomVersion) //
             .toString();
 
-        FileUtils.write(file, content, UTF_8, false);
-
-        return Optional.of(protocol(version));
+        FileUtils.write(file, packageJsonContent, encoding, false);
+        return Optional.of(Protocol.of(name, pomVersion));
     }
 
-    private Protocol protocol(String version) {
-        return Protocol.of( //
-            separatorsToUnix(substringAfter(file.getAbsolutePath(), baseDir.getAbsolutePath() + File.separator)), //
-            version //
-        );
+    private static String relativeName(File file, File baseDir) {
+        return separatorsToUnix(substringAfter(file.getAbsolutePath(), baseDir.getAbsolutePath() + separator));
     }
 
     @SneakyThrows(IOException.class)
