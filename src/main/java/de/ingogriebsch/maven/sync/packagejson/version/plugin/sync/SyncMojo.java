@@ -19,14 +19,11 @@ import static java.lang.String.format;
 import static java.nio.charset.Charset.forName;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Singleton;
 
-import com.google.common.collect.Lists;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
-import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -96,9 +93,7 @@ class SyncMojo extends AbstractMojo {
      */
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
-        File baseDir = project.getBasedir();
-        List<File> packageJsons = PackageJsonCollector.of(baseDir, asList(includes), asList(excludes)).collect();
-
+        List<File> packageJsons = collectPackageJsons(includes, excludes);
         if (packageJsons.isEmpty()) {
             throw new MojoFailureException("No package.json file found in this project!");
         }
@@ -108,6 +103,7 @@ class SyncMojo extends AbstractMojo {
             "Synchronizing the version of the %d found package.json file%s with the version of the pom.xml [using '%s' evaluation]...",
             packageJsons.size(), singlePackageJson ? "" : "s", pomVersionEvaluation));
 
+        File baseDir = project.getBasedir();
         String pomVersion = evaluatePomVersion(project);
         packageJsons.forEach(packageJson -> synchronize(pomVersion, baseDir, packageJson, encoding));
 
@@ -117,9 +113,5 @@ class SyncMojo extends AbstractMojo {
     private void synchronize(String pomVersion, File baseDir, File packageJson, String encoding) {
         VersionWriter.of(baseDir, packageJson, forName(encoding)).write(pomVersion)
             .ifPresent(p -> logger.info("  " + p.toString()));
-    }
-
-    private static List<String> asList(String[] values) {
-        return values != null ? Arrays.asList(values) : Lists.newArrayList();
     }
 }

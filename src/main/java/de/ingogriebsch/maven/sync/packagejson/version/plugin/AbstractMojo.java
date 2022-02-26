@@ -17,7 +17,9 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin;
 
 import static java.lang.String.format;
 
+import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -48,6 +50,13 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
     private final PomVersionEvaluatorFactory pomVersionEvaluationFactory;
 
     /**
+     * The collector instance that should be used to collect the relevant <code>package.json</code> like files.
+     * 
+     * @since 1.2.0
+     */
+    private final PackageJsonCollector packageJsonCollector;
+
+    /**
      * A logger that should be used instead of the log instance that is provided through Maven.
      * 
      * @since 1.0.0
@@ -72,6 +81,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
     protected AbstractMojo() {
         this.logger = Logger.logger(this::getLog);
         this.pomVersionEvaluationFactory = new PomVersionEvaluatorFactory(logger);
+        this.packageJsonCollector = new PackageJsonCollector(logger);
     }
 
     /**
@@ -170,5 +180,17 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
      */
     protected String evaluatePomVersion(MavenProject mavenProject) {
         return pomVersionEvaluationFactory.create(getPomVersionEvaluation()).map(p -> p.get(project)).orElseThrow();
+    }
+
+    /**
+     * Collects the <code>package.json</code> like files which should be respected during the execution of the mojo.
+     * 
+     * @param includes the optional includes that are used to evaluate which files should be included.
+     * @param excludes the optional excludes that are used to evaluate which files should be included.
+     * @return the list of <code>package.json</code> like files that are found based on the given includes and excludes
+     * @since 1.2.0
+     */
+    protected List<File> collectPackageJsons(String[] includes, String[] excludes) {
+        return packageJsonCollector.collect(project.getBasedir(), includes, excludes);
     }
 }

@@ -15,6 +15,7 @@
  */
 package de.ingogriebsch.maven.sync.packagejson.version.plugin;
 
+import static de.ingogriebsch.maven.sync.packagejson.version.plugin.Logger.noOpLogger;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.FILE;
 
@@ -29,8 +30,10 @@ class PackageJsonCollectorTest {
 
     @Test
     void should_return_an_empty_list_if_the_base_directory_is_empty(@TempDir File tempDir) {
-        PackageJsonCollector collector = PackageJsonCollector.of(tempDir).withInclude("**/*.*");
-        assertThat(collector.collect()).isEmpty();
+        PackageJsonCollector collector = new PackageJsonCollector(noOpLogger());
+        List<File> files = collector.collect(tempDir, new String[] { "**/*.*" }, null);
+
+        assertThat(files).isEmpty();
     }
 
     @Test
@@ -39,8 +42,10 @@ class PackageJsonCollectorTest {
         File packageJson = new File(tempDir, "package.json");
         packageJson.createNewFile();
 
-        PackageJsonCollector collector = PackageJsonCollector.of(tempDir).withInclude("package.json");
-        assertThat(collector.collect()).hasSize(1).first().isEqualTo(packageJson);
+        PackageJsonCollector collector = new PackageJsonCollector(noOpLogger());
+        List<File> files = collector.collect(tempDir, new String[] { "package.json" }, null);
+
+        assertThat(files).hasSize(1).first().isEqualTo(packageJson);
     }
 
     @Test
@@ -53,8 +58,10 @@ class PackageJsonCollectorTest {
         File packageJson = new File(subDir, "package.json");
         packageJson.createNewFile();
 
-        PackageJsonCollector collector = PackageJsonCollector.of(tempDir).withInclude("dir/package.json");
-        assertThat(collector.collect()).hasSize(1).first(FILE).isEqualTo(packageJson);
+        PackageJsonCollector collector = new PackageJsonCollector(noOpLogger());
+        List<File> files = collector.collect(tempDir, new String[] { "dir/package.json" }, null);
+
+        assertThat(files).hasSize(1).first(FILE).isEqualTo(packageJson);
     }
 
     @Test
@@ -62,8 +69,10 @@ class PackageJsonCollectorTest {
         throws IOException {
         new File(tempDir, "package-lock.json").createNewFile();
 
-        PackageJsonCollector collector = PackageJsonCollector.of(tempDir).withInclude("package.json");
-        assertThat(collector.collect()).isEmpty();
+        PackageJsonCollector collector = new PackageJsonCollector(noOpLogger());
+        List<File> files = collector.collect(tempDir, new String[] { "package.json" }, null);
+
+        assertThat(files).isEmpty();
     }
 
     @Test
@@ -80,9 +89,10 @@ class PackageJsonCollectorTest {
         File packageJson2 = new File(subDir, "package.json");
         packageJson2.createNewFile();
 
-        PackageJsonCollector collector = PackageJsonCollector.of(tempDir).withInclude("**/package.json");
-        List<File> collected = collector.collect();
-        assertThat(collected).containsExactlyInAnyOrder(packageJson1, packageJson2);
+        PackageJsonCollector collector = new PackageJsonCollector(noOpLogger());
+        List<File> files = collector.collect(tempDir, new String[] { "**/package.json" }, null);
+
+        assertThat(files).containsExactlyInAnyOrder(packageJson1, packageJson2);
     }
 
     @Test
@@ -95,7 +105,9 @@ class PackageJsonCollectorTest {
 
         new File(subDir, "package-lock.json").createNewFile();
 
-        PackageJsonCollector collector = PackageJsonCollector.of(tempDir).withInclude("**/package.json");
-        assertThat(collector.collect()).isEmpty();
+        PackageJsonCollector collector = new PackageJsonCollector(noOpLogger());
+        List<File> files = collector.collect(tempDir, new String[] { "**/package.json" }, null);
+
+        assertThat(files).isEmpty();
     }
 }

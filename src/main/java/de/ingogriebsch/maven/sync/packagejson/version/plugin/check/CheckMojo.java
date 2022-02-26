@@ -22,15 +22,12 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.VERIFY;
 
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Singleton;
 
-import com.google.common.collect.Lists;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
-import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.check.VersionValidator.ConstraintViolation;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -118,9 +115,7 @@ class CheckMojo extends AbstractMojo {
      */
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
-        File baseDir = project.getBasedir();
-        List<File> packageJsons = PackageJsonCollector.of(baseDir, asList(includes), asList(excludes)).collect();
-
+        List<File> packageJsons = collectPackageJsons(includes, excludes);
         if (packageJsons.isEmpty()) {
             String msg = "No package.json file found in this project!";
             if (failIfNoneFound) {
@@ -135,6 +130,7 @@ class CheckMojo extends AbstractMojo {
             "Checking if the version of the %d found package.json file%s %s in sync with the version of the pom.xml [using '%s' evaluation]...",
             packageJsons.size(), singlePackageJson ? "" : "s", singlePackageJson ? "is" : "are", pomVersionEvaluation));
 
+        File baseDir = project.getBasedir();
         String pomVersion = evaluatePomVersion(project);
         List<ConstraintViolation> violations = packageJsons //
             .stream() //
@@ -161,9 +157,5 @@ class CheckMojo extends AbstractMojo {
 
     private static Optional<ConstraintViolation> validate(String pomVersion, File baseDir, File packageJson, String encoding) {
         return VersionValidator.of(baseDir, packageJson, Charset.forName(encoding)).validate(pomVersion);
-    }
-
-    private static List<String> asList(String[] values) {
-        return values != null ? Arrays.asList(values) : Lists.newArrayList();
     }
 }

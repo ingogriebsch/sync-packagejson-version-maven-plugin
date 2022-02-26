@@ -21,9 +21,9 @@ import static java.util.stream.Collectors.toList;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
-import lombok.Value;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
@@ -32,80 +32,57 @@ import org.apache.maven.shared.model.fileset.util.FileSetManager;
  * 
  * @since 1.0.0
  */
-@Value(staticConstructor = "of")
 public class PackageJsonCollector {
 
-    File baseDir;
-    List<String> includes;
-    List<String> excludes;
+    private final Logger logger;
+
+    public PackageJsonCollector(Logger logger) {
+        this.logger = logger;
+    }
 
     /**
      * Returns the list of <code>package.json</code> like files that are found based on the given includes and excludes.
      * 
+     * @param baseDir the directory that is used as the root of the folder and file structure.
+     * @param includes the optional includes that are used to evaluate which files should be included.
+     * @param excludes the optional excludes that are used to evaluate which files should be included.
      * @return the list of <code>package.json</code> like files that are found based on the given includes and excludes
-     * @since 1.0.0
+     * @since 1.2.0
      */
-    public List<File> collect() {
-        return stream(new FileSetManager().getIncludedFiles(prepareFileSet())).map(this::file).collect(toList());
+    public List<File> collect(File baseDir, String[] includes, String[] excludes) {
+        FileSet fileSet = prepareFileSet(baseDir, includes, excludes);
+        logger.debug("Using fileSet [%s] to collect the relevant files.", asString(fileSet));
+
+        String[] fileNames = new FileSetManager().getIncludedFiles(fileSet);
+        List<File> files = stream(fileNames).map(n -> new File(baseDir, n)).collect(toList());
+
+        logger.debug("Collected the following files %s.", files);
+        return files;
     }
 
-    /**
-     * A factory method that allows to create an instance of this class with the given base directory.
-     * 
-     * @param baseDir the base directory used to collect the pacakge.json like files
-     * @return An instance of type {@link PackageJsonCollector}
-     * @since 1.0.0
-     */
-    public static PackageJsonCollector of(File baseDir) {
-        return of(baseDir, (List<String>) null, (List<String>) null);
-    }
-
-    /**
-     * A factory method that allows to create an instance of this class with the given base directory, include and exclude.
-     * 
-     * @param baseDir the base directory used to collect the pacakge.json like files
-     * @param include a file-set patterns that is interpreted relative to the given base directory
-     * @param exclude a file-set patterns that is interpreted relative to the given base directory
-     * @return An instance of type {@link PackageJsonCollector}
-     * @since 1.0.0
-     */
-    public static PackageJsonCollector of(File baseDir, String include, String exclude) {
-        return of(baseDir, newArrayList(include), newArrayList(exclude));
-    }
-
-    /**
-     * A factory method that allows to create an instance of this class based on this instance and the given include.
-     * 
-     * @param include a file-set patterns that is interpreted relative to the given base directory
-     * @return An instance of type {@link PackageJsonCollector}
-     * @since 1.0.0
-     */
-    public PackageJsonCollector withInclude(String include) {
-        return of(baseDir, newArrayList(include), excludes);
-    }
-
-    /**
-     * A factory method that allows to create an instance of this class based on this instance and the given exclude.
-     * 
-     * @param exclude a file-set patterns that is interpreted relative to the given base directory
-     * @return An instance of type {@link PackageJsonCollector}
-     * @since 1.0.0
-     */
-    public PackageJsonCollector withExclude(String exclude) {
-        return of(baseDir, includes, newArrayList(exclude));
-    }
-
-    private FileSet prepareFileSet() {
+    private FileSet prepareFileSet(File baseDir, String[] includes, String[] excludes) {
         FileSet fileSet = new FileSet();
-        fileSet.setDirectory(baseDir.getAbsolutePath());
         fileSet.setFollowSymlinks(false);
         fileSet.setUseDefaultExcludes(false);
-        fileSet.setIncludes(includes);
-        fileSet.setExcludes(excludes);
+        fileSet.setDirectory(baseDir.getAbsolutePath());
+        fileSet.setIncludes(asList(includes));
+        fileSet.setExcludes(asList(excludes));
         return fileSet;
     }
 
-    private File file(String name) {
-        return new File(baseDir, name);
+    private static List<String> asList(String[] elements) {
+        return elements != null ? Arrays.asList(elements) : newArrayList();
+    }
+
+    private static String asString(FileSet fileSet) {
+        return new StringBuilder("FileSet(") //
+            .append("directory=") //
+            .append(fileSet.getDirectory()) //
+            .append(", includes=") //
+            .append(fileSet.getIncludes()) //
+            .append(", excludes=") //
+            .append(fileSet.getExcludes()) //
+            .append(")") //
+            .toString();
     }
 }
