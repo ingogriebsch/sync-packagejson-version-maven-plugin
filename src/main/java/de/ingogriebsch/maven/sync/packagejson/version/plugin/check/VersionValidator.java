@@ -16,16 +16,13 @@
 package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
-import static org.apache.commons.lang3.StringUtils.substringAfter;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.Logger;
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJson;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.Value;
@@ -49,33 +46,26 @@ class VersionValidator {
      * Checks if the version of the given <code>package.json</code> like file is valid (means is the same as the given version).
      * 
      * @param pomVersion the version of the <code>pom.xml</code>
-     * @param baseDir the directory that is used as the root of the folder and file structure.
-     * @param file the <code>package.json</code> like file that is validated.
-     * @param encoding the encoding of the <code>package.json</code> like file.
+     * @param packageJson the <code>package.json</code> that is validated.
      * @return an {@link Optional} that is either empty (if the version is valid) or contains a {@link ConstraintViolation} (if
      *         the version is not valid).
      * @since 1.0.0
      */
-    Optional<ConstraintViolation> validate(String pomVersion, File baseDir, File file, Charset encoding) {
-        String name = relativeName(file, baseDir);
-        String packageJsonVersion = read(file).getVersion();
-        logger.debug("Read version '%s' from package.json '%s'.", packageJsonVersion, name);
+    Optional<ConstraintViolation> validate(String pomVersion, PackageJson packageJson) {
+        String packageJsonVersion = read(packageJson).getVersion();
+        logger.debug("Read version '%s' from package.json '%s'.", packageJsonVersion, packageJson);
 
         if (!packageJsonVersion.equals(pomVersion)) {
             logger.debug("Version '%s' of the package.json does not match against version '%s' of the pom.xml.",
                 packageJsonVersion, pomVersion);
-            return Optional.of(ConstraintViolation.of(name, packageJsonVersion, pomVersion));
+            return Optional.of(ConstraintViolation.of(packageJson.getName(), packageJsonVersion, pomVersion));
         }
         return Optional.empty();
     }
 
-    private static String relativeName(File file, File baseDir) {
-        return separatorsToUnix(substringAfter(file.getAbsolutePath(), baseDir.getAbsolutePath() + File.separator));
-    }
-
     @SneakyThrows(IOException.class)
-    private static PackageJson read(File file) {
-        return objectMapper.readValue(file, PackageJson.class);
+    private static PackageJsonContent read(PackageJson packageJson) {
+        return objectMapper.readValue(packageJson.getFile(), PackageJsonContent.class);
     }
 
     private static ObjectMapper objectMapper() {
@@ -111,7 +101,7 @@ class VersionValidator {
     }
 
     @Data
-    private static class PackageJson {
+    private static class PackageJsonContent {
 
         private String version;
     }

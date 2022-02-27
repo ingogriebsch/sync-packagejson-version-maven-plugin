@@ -16,18 +16,19 @@
 package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
 
 import static java.lang.String.format;
+import static java.nio.charset.Charset.forName;
 import static java.util.stream.Collectors.toList;
 
 import static org.apache.maven.plugins.annotations.LifecyclePhase.VERIFY;
 
 import java.io.File;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Singleton;
 
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJson;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.check.VersionValidator.ConstraintViolation;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -146,7 +147,8 @@ class CheckMojo extends AbstractMojo {
         String pomVersion = evaluatePomVersion(project);
         List<ConstraintViolation> violations = packageJsons //
             .stream() //
-            .map(pj -> validate(pomVersion, baseDir, pj, encoding)) //
+            .map(pj -> PackageJson.of(baseDir, pj, forName(encoding))) //
+            .map(pj -> versionValidator.validate(pomVersion, pj)) //
             .flatMap(Optional::stream) //
             .collect(toList());
 
@@ -164,9 +166,5 @@ class CheckMojo extends AbstractMojo {
 
     private void output(List<ConstraintViolation> violations) {
         violations.forEach(v -> logger.error(v.toString()));
-    }
-
-    private Optional<ConstraintViolation> validate(String pomVersion, File baseDir, File packageJson, String encoding) {
-        return versionValidator.validate(pomVersion, baseDir, packageJson, Charset.forName(encoding));
     }
 }
