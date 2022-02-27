@@ -40,11 +40,11 @@ class VersionWriterTest {
     @Test
     void should_replace_version_in_file(@TempDir File tempDir) throws Exception {
         String version = "1.2.3-SNAPSHOT";
-        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"), UTF_8);
-        writeStringToFile(packageJson.getFile(), "{\"version\": \"1.0.0\"}", packageJson.getEncoding());
+        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"));
+        writeStringToFile(packageJson.getFile(), "{\"version\": \"1.0.0\"}", UTF_8);
 
         VersionWriter validator = new VersionWriter(noOpLogger());
-        assertThatNoException().isThrownBy(() -> validator.write(version, packageJson));
+        assertThatNoException().isThrownBy(() -> validator.write(version, packageJson, UTF_8));
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> json = objectMapper.readValue(packageJson.getFile(), objectMapper.constructType(Map.class));
@@ -53,35 +53,35 @@ class VersionWriterTest {
 
     @Test
     void should_preserve_the_structure_of_the_file(@TempDir File tempDir) throws Exception {
-        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"), UTF_8);
+        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"));
         copyFile(new File(VersionWriterTest.class.getResource("versionWriter/package.json").toURI()), packageJson.getFile());
-        String contentBefore = readFileToString(packageJson.getFile(), packageJson.getEncoding());
+        String contentBefore = readFileToString(packageJson.getFile(), UTF_8);
 
         VersionWriter validator = new VersionWriter(noOpLogger());
-        assertThatNoException().isThrownBy(() -> validator.write("0.2.0", packageJson));
+        assertThatNoException().isThrownBy(() -> validator.write("0.2.0", packageJson, UTF_8));
 
-        String contentAfter = readFileToString(packageJson.getFile(), packageJson.getEncoding());
+        String contentAfter = readFileToString(packageJson.getFile(), UTF_8);
         assertThat(contentBefore).isEqualTo(contentAfter);
     }
 
     @Test
     void should_fail_if_the_file_is_not_a_valid_package_json(@TempDir File tempDir) throws IOException {
-        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"), UTF_8);
-        writeStringToFile(packageJson.getFile(), "some content", packageJson.getEncoding());
+        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"));
+        writeStringToFile(packageJson.getFile(), "some content", UTF_8);
 
         VersionWriter validator = new VersionWriter(noOpLogger());
-        assertThatThrownBy(() -> validator.write("1.2.3-SNAPSHOT", packageJson)).isInstanceOf(IOException.class);
+        assertThatThrownBy(() -> validator.write("1.2.3-SNAPSHOT", packageJson, UTF_8)).isInstanceOf(IOException.class);
     }
 
     @Test
     void should_only_write_top_level_version_if_single_line_content(@TempDir File tempDir) throws Exception {
         String content = "{\"version\": \"1.0.0\", \"dependencies\": {\"version\": \"2.0.0\"}}";
-        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"), UTF_8);
-        writeStringToFile(packageJson.getFile(), content, packageJson.getEncoding());
+        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"));
+        writeStringToFile(packageJson.getFile(), content, UTF_8);
 
         String version = "1.2.3-SNAPSHOT";
         VersionWriter validator = new VersionWriter(noOpLogger());
-        assertThatNoException().isThrownBy(() -> validator.write(version, packageJson));
+        assertThatNoException().isThrownBy(() -> validator.write(version, packageJson, UTF_8));
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> json = objectMapper.readValue(packageJson.getFile(), objectMapper.constructType(Map.class));
@@ -103,12 +103,12 @@ class VersionWriterTest {
                 + "    }\r\n"
                 + "}\r\n";
         // @formatter:on
-        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"), UTF_8);
-        writeStringToFile(packageJson.getFile(), content, packageJson.getEncoding());
+        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"));
+        writeStringToFile(packageJson.getFile(), content, UTF_8);
 
         String version = "1.2.3-SNAPSHOT";
         VersionWriter validator = new VersionWriter(noOpLogger());
-        assertThatNoException().isThrownBy(() -> validator.write(version, packageJson));
+        assertThatNoException().isThrownBy(() -> validator.write(version, packageJson, UTF_8));
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> json = objectMapper.readValue(packageJson.getFile(), objectMapper.constructType(Map.class));

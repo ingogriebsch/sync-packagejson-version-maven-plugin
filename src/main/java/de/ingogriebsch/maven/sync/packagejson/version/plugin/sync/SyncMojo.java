@@ -18,7 +18,6 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin.sync;
 import static java.lang.String.format;
 import static java.nio.charset.Charset.forName;
 
-import java.io.File;
 import java.util.List;
 
 import javax.inject.Singleton;
@@ -105,7 +104,7 @@ class SyncMojo extends AbstractMojo {
      */
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
-        List<File> packageJsons = collectPackageJsons(includes, excludes);
+        List<PackageJson> packageJsons = collectPackageJsons(includes, excludes);
         if (packageJsons.isEmpty()) {
             throw new MojoFailureException("No package.json found in this project!");
         }
@@ -115,17 +114,15 @@ class SyncMojo extends AbstractMojo {
             "Synchronizing the version of the %d found package.json%s with the version of the pom.xml [using '%s' evaluation]...",
             packageJsons.size(), singlePackageJson ? "" : "'s", pomVersionEvaluation));
 
-        File baseDir = project.getBasedir();
         String pomVersion = evaluatePomVersion(project);
         packageJsons //
             .stream() //
-            .map(pj -> PackageJson.of(baseDir, pj, forName(encoding))) //
             .forEach(pj -> synchronize(pomVersion, pj));
 
         logger.info("Done! :)");
     }
 
     private void synchronize(String pomVersion, PackageJson packageJson) {
-        versionWriter.write(pomVersion, packageJson).ifPresent(p -> logger.info("  " + p.toString()));
+        versionWriter.write(pomVersion, packageJson, forName(encoding)).ifPresent(p -> logger.info("  " + p.toString()));
     }
 }

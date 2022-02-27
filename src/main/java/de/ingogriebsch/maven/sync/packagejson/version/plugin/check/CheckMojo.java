@@ -21,7 +21,6 @@ import static java.util.stream.Collectors.toList;
 
 import static org.apache.maven.plugins.annotations.LifecyclePhase.VERIFY;
 
-import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -128,7 +127,7 @@ class CheckMojo extends AbstractMojo {
      */
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
-        List<File> packageJsons = collectPackageJsons(includes, excludes);
+        List<PackageJson> packageJsons = collectPackageJsons(includes, excludes);
         if (packageJsons.isEmpty()) {
             String msg = "No package.json file found in this project!";
             if (failIfNoneFound) {
@@ -143,12 +142,10 @@ class CheckMojo extends AbstractMojo {
             "Checking if the version of the %d found package.json%s %s in sync with the version of the pom.xml [using '%s' evaluation]...",
             packageJsons.size(), singlePackageJson ? "" : "'s", singlePackageJson ? "is" : "are", pomVersionEvaluation));
 
-        File baseDir = project.getBasedir();
         String pomVersion = evaluatePomVersion(project);
         List<ConstraintViolation> violations = packageJsons //
             .stream() //
-            .map(pj -> PackageJson.of(baseDir, pj, forName(encoding))) //
-            .map(pj -> versionValidator.validate(pomVersion, pj)) //
+            .map(pj -> versionValidator.validate(pomVersion, pj, forName(encoding))) //
             .flatMap(Optional::stream) //
             .collect(toList());
 

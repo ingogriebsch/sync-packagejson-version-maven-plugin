@@ -55,12 +55,13 @@ class VersionWriter {
      * 
      * @param pomVersion the version that should be written to the file
      * @param packageJson the <code>package.json</code> there the version is written.
+     * @param encoding the encoding in which the <code>package.json</code> is interpreted.
      * @return an {@link Optional} that is either empty (if the version is already the same as the version in the pom.xml) or
      *         contains a {@link Protocol} (if the version needs to be synchronized).
      * @since 1.0.0
      */
     @SneakyThrows(IOException.class)
-    Optional<Protocol> write(String pomVersion, PackageJson packageJson) {
+    Optional<Protocol> write(String pomVersion, PackageJson packageJson, Charset encoding) {
         String name = packageJson.getName();
 
         String version = extractVersion(packageJson);
@@ -70,7 +71,6 @@ class VersionWriter {
         }
 
         File file = packageJson.getFile();
-        Charset encoding = packageJson.getEncoding();
         String content = FileUtils.readFileToString(file, encoding);
 
         Matcher matcher = pattern.matcher(content);

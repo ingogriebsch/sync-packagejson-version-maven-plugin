@@ -6,7 +6,6 @@ import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 import java.io.File;
-import java.nio.charset.Charset;
 
 import lombok.Value;
 
@@ -20,7 +19,6 @@ public class PackageJson {
 
     File baseDir;
     File file;
-    Charset encoding;
 
     @Override
     public String toString() {

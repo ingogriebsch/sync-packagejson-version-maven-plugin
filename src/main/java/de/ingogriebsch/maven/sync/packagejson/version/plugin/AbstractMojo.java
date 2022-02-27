@@ -17,11 +17,11 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin;
 
 import static java.lang.String.format;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector.Params;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -190,7 +190,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
      * @return the list of <code>package.json's</code> that are found.
      * @since 1.2.0
      */
-    protected List<File> collectPackageJsons(String[] includes, String[] excludes) {
-        return packageJsonCollector.collect(project.getBasedir(), includes, excludes);
+    protected List<PackageJson> collectPackageJsons(String[] includes, String[] excludes) {
+        return packageJsonCollector.collect(Params.of(project.getBasedir(), includes, excludes));
     }
 }

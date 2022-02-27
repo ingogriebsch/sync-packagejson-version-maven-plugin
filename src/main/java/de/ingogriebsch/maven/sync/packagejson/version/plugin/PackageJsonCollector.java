@@ -24,6 +24,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.Value;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
@@ -43,35 +44,49 @@ public class PackageJsonCollector {
     /**
      * Returns the list of <code>package.json's</code> that are found based on the given includes and excludes.
      * 
-     * @param baseDir the directory that is used as the root of the folder and file structure.
-     * @param includes the optional includes that are used to evaluate which files should be included.
-     * @param excludes the optional excludes that are used to evaluate which files should be included.
+     * @param params the parameters that are used to collect the relevant <code>package.json's</code>.
      * @return the list of <code>package.json's</code> that are found based on the given includes and excludes
      * @since 1.2.0
      */
-    public List<File> collect(File baseDir, String[] includes, String[] excludes) {
-        FileSet fileSet = prepareFileSet(baseDir, includes, excludes);
+    public List<PackageJson> collect(Params params) {
+        FileSet fileSet = prepareFileSet(params);
         logger.debug("Using fileSet [%s] to collect the relevant package.json's.", asString(fileSet));
 
         String[] fileNames = new FileSetManager().getIncludedFiles(fileSet);
-        List<File> files = stream(fileNames).map(n -> new File(baseDir, n)).collect(toList());
+        List<PackageJson> files = stream(fileNames).map(n -> packageJson(n, params)).collect(toList());
 
         logger.debug("Collected the following package.json's: %s.", files);
         return files;
     }
 
-    private FileSet prepareFileSet(File baseDir, String[] includes, String[] excludes) {
+    private static PackageJson packageJson(String packageJsonFilename, Params params) {
+        return PackageJson.of(params.getBaseDir(), new File(params.getBaseDir(), packageJsonFilename));
+    }
+
+    private static FileSet prepareFileSet(Params params) {
         FileSet fileSet = new FileSet();
         fileSet.setFollowSymlinks(false);
         fileSet.setUseDefaultExcludes(false);
-        fileSet.setDirectory(baseDir.getAbsolutePath());
-        fileSet.setIncludes(asList(includes));
-        fileSet.setExcludes(asList(excludes));
+        fileSet.setDirectory(params.getBaseDir().getAbsolutePath());
+        fileSet.setIncludes(asList(params.getIncludes()));
+        fileSet.setExcludes(asList(params.getExcludes()));
         return fileSet;
     }
 
     private static List<String> asList(String[] elements) {
         return elements != null ? Arrays.asList(elements) : newArrayList();
+    }
+
+    @Value(staticConstructor = "of")
+    public static class Params {
+
+        File baseDir;
+        String[] includes;
+        String[] excludes;
+
+        public static Params of(File baseDir, String[] includes) {
+            return of(baseDir, includes, null);
+        }
     }
 
     private static String asString(FileSet fileSet) {

@@ -18,6 +18,7 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin.check;
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,11 +48,12 @@ class VersionValidator {
      * 
      * @param pomVersion the version of the <code>pom.xml</code>
      * @param packageJson the <code>package.json</code> that is validated.
+     * @param encoding the encoding in which the <code>package.json</code> is interpreted.
      * @return an {@link Optional} that is either empty (if the version is valid) or contains a {@link ConstraintViolation} (if
      *         the version is not valid).
      * @since 1.0.0
      */
-    Optional<ConstraintViolation> validate(String pomVersion, PackageJson packageJson) {
+    Optional<ConstraintViolation> validate(String pomVersion, PackageJson packageJson, Charset encoding) {
         String version = read(packageJson).getVersion();
         logger.debug("Read version '%s' from '%s'.", version, packageJson);
 

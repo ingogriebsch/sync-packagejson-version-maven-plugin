@@ -37,11 +37,11 @@ class VersionValidatorTest {
     @Test
     void should_return_an_empty_optional_if_the_version_matches(@TempDir File tempDir) throws Exception {
         String version = "1.2.3-SNAPSHOT";
-        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"), UTF_8);
+        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"));
         writeStringToFile(packageJson.getFile(), "{\"version\": \"" + version + "\"}", UTF_8);
 
         VersionValidator validator = new VersionValidator(noOpLogger());
-        Optional<ConstraintViolation> violation = validator.validate(version, packageJson);
+        Optional<ConstraintViolation> violation = validator.validate(version, packageJson, UTF_8);
 
         assertThat(violation).isEmpty();
     }
@@ -50,22 +50,22 @@ class VersionValidatorTest {
     void should_return_a_constraint_violation_if_the_version_does_not_match(@TempDir File tempDir) throws Exception {
         String pomVersion = "1.2.3-SNAPSHOT";
         String packageJsonVersion = "1.2.4-SNAPSHOT";
-        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"), UTF_8);
+        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"));
         writeStringToFile(packageJson.getFile(), "{\"version\": \"" + packageJsonVersion + "\"}", UTF_8);
 
         VersionValidator validator = new VersionValidator(noOpLogger());
-        Optional<ConstraintViolation> violation = validator.validate(pomVersion, packageJson);
+        Optional<ConstraintViolation> violation = validator.validate(pomVersion, packageJson, UTF_8);
 
         assertThat(violation).isNotEmpty();
     }
 
     @Test
     void should_fail_if_the_file_is_not_a_valid_package_json(@TempDir File tempDir) throws IOException {
-        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"), UTF_8);
+        PackageJson packageJson = PackageJson.of(tempDir, new File(tempDir, "package.json"));
         writeStringToFile(packageJson.getFile(), "some content", UTF_8);
 
         VersionValidator validator = new VersionValidator(noOpLogger());
-        assertThatThrownBy(() -> validator.validate("1.2.3-SNAPSHOT", packageJson)).isInstanceOf(IOException.class);
+        assertThatThrownBy(() -> validator.validate("1.2.3-SNAPSHOT", packageJson, UTF_8)).isInstanceOf(IOException.class);
     }
 
     @Nested
