@@ -24,7 +24,7 @@ public class Logger {
     }
 
     public static Logger noOpLogger() {
-        return logger(() -> new NoOpLog());
+        return logger(NoOpLog::new);
     }
 
     /**
