@@ -24,6 +24,7 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.AbstractMojo;
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJson;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -116,12 +117,15 @@ class SyncMojo extends AbstractMojo {
 
         File baseDir = project.getBasedir();
         String pomVersion = evaluatePomVersion(project);
-        packageJsons.forEach(packageJson -> synchronize(pomVersion, baseDir, packageJson, encoding));
+        packageJsons //
+            .stream() //
+            .map(pj -> PackageJson.of(baseDir, pj, forName(encoding))) //
+            .forEach(pj -> synchronize(pomVersion, pj));
 
         logger.info("Done! :)");
     }
 
-    private void synchronize(String pomVersion, File baseDir, File packageJson, String encoding) {
-        versionWriter.write(pomVersion, baseDir, packageJson, forName(encoding)).ifPresent(p -> logger.info("  " + p.toString()));
+    private void synchronize(String pomVersion, PackageJson packageJson) {
+        versionWriter.write(pomVersion, packageJson).ifPresent(p -> logger.info("  " + p.toString()));
     }
 }

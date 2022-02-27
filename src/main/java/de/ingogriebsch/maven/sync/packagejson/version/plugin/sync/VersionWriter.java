@@ -15,13 +15,10 @@
  */
 package de.ingogriebsch.maven.sync.packagejson.version.plugin.sync;
 
-import static java.io.File.separator;
 import static java.util.Optional.empty;
 import static java.util.regex.Pattern.DOTALL;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
-import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
-import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +29,7 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.Logger;
+import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJson;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.Value;
@@ -56,46 +54,43 @@ class VersionWriter {
      * Writes the version to the given file.
      * 
      * @param pomVersion the version that should be written to the file
+     * @param packageJson the <code>package.json</code> there the version is written.
      * @return an {@link Optional} that is either empty (if the version is already the same as the version in the pom.xml) or
      *         contains a {@link Protocol} (if the version needs to be synchronized).
-     * @param baseDir the directory that is used as the root of the folder and file structure.
-     * @param file the <code>package.json</code> like file that is validated.
-     * @param encoding the encoding of the <code>package.json</code> like file.
      * @since 1.0.0
      */
     @SneakyThrows(IOException.class)
-    Optional<Protocol> write(String pomVersion, File baseDir, File file, Charset encoding) {
-        String name = relativeName(file, baseDir);
+    Optional<Protocol> write(String pomVersion, PackageJson packageJson) {
+        String name = packageJson.getName();
 
-        String packageJsonVersion = extractVersion(file, encoding);
-        if (packageJsonVersion.equals(pomVersion)) {
-            logger.debug("Version of the package.json '%s' is the same as of the pom.xml, therefore returning.", name);
+        String version = extractVersion(packageJson);
+        if (version.equals(pomVersion)) {
+            logger.debug("Version of the '%s' is the same as of the pom.xml, therefore returning.", name);
             return empty();
         }
 
-        String packageJsonContent = FileUtils.readFileToString(file, encoding);
-        Matcher matcher = pattern.matcher(packageJsonContent);
+        File file = packageJson.getFile();
+        Charset encoding = packageJson.getEncoding();
+        String content = FileUtils.readFileToString(file, encoding);
+
+        Matcher matcher = pattern.matcher(content);
         if (!matcher.matches() || matcher.groupCount() != 1) {
-            logger.debug("No version found in package.json '%s', therefore returning.", name);
+            logger.debug("No version found in '%s', therefore returning.", name);
             return empty();
         }
 
-        logger.debug("Replacing the version in package.json '%s' with version '%s'.", name, pomVersion);
-        packageJsonContent = new StringBuilder(packageJsonContent) //
+        logger.debug("Replacing the version in '%s' with version '%s'.", name, pomVersion);
+        content = new StringBuilder(content) //
             .replace(matcher.start(1), matcher.end(1), pomVersion) //
             .toString();
 
-        FileUtils.write(file, packageJsonContent, encoding, false);
+        FileUtils.write(file, content, encoding, false);
         return Optional.of(Protocol.of(name, pomVersion));
     }
 
-    private static String relativeName(File file, File baseDir) {
-        return separatorsToUnix(substringAfter(file.getAbsolutePath(), baseDir.getAbsolutePath() + separator));
-    }
-
     @SneakyThrows(IOException.class)
-    private static String extractVersion(File file, Charset encoding) {
-        return objectMapper.readValue(file, PackageJson.class).getVersion();
+    private static String extractVersion(PackageJson packageJson) {
+        return objectMapper.readValue(packageJson.getFile(), PackageJsonContent.class).getVersion();
     }
 
     private static ObjectMapper objectMapper() {
@@ -128,7 +123,7 @@ class VersionWriter {
     }
 
     @Data
-    private static class PackageJson {
+    private static class PackageJsonContent {
 
         private String version;
     }
