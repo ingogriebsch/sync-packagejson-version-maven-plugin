@@ -50,7 +50,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
     private final PomVersionEvaluatorFactory pomVersionEvaluationFactory;
 
     /**
-     * The collector instance that should be used to collect the relevant <code>package.json</code> like files.
+     * The collector that is used to collect the relevant <code>package.json's</code>.
      * 
      * @since 1.2.0
      */
@@ -183,11 +183,11 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
     }
 
     /**
-     * Collects the <code>package.json</code> like files which should be respected during the execution of the mojo.
+     * Collects the <code>package.json's</code> which should be respected during the execution of the mojo.
      * 
      * @param includes the optional includes that are used to evaluate which files should be included.
      * @param excludes the optional excludes that are used to evaluate which files should be included.
-     * @return the list of <code>package.json</code> like files that are found based on the given includes and excludes
+     * @return the list of <code>package.json's</code> that are found.
      * @since 1.2.0
      */
     protected List<File> collectPackageJsons(String[] includes, String[] excludes) {

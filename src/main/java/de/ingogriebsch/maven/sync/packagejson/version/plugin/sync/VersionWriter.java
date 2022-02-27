@@ -36,7 +36,7 @@ import lombok.Value;
 import org.apache.commons.io.FileUtils;
 
 /**
- * A component that overwrites the version of the <code>package.json</code> with the version of the <code>pom.xml</code>.
+ * A component that overwrites the version of a <code>package.json</code> with the version of the <code>pom.xml</code>.
  * 
  * @since 1.0.0
  */
@@ -51,7 +51,7 @@ class VersionWriter {
     }
 
     /**
-     * Writes the version to the given file.
+     * Writes the version to the given <code>package.json</code>.
      * 
      * @param pomVersion the version that should be written to the file
      * @param packageJson the <code>package.json</code> there the version is written.
@@ -65,7 +65,7 @@ class VersionWriter {
 
         String version = extractVersion(packageJson);
         if (version.equals(pomVersion)) {
-            logger.debug("Version of the '%s' is the same as of the pom.xml, therefore returning.", name);
+            logger.debug("The version of '%s' is the same as of the pom.xml, therefore returning.", name);
             return empty();
         }
 
@@ -100,7 +100,7 @@ class VersionWriter {
     }
 
     /**
-     * A pojo that describes that the version of the <code>package.json</code> like file is not the same as the version of the
+     * A pojo that describes that the version of the <code>package.json</code> is not the same as the version of the
      * <code>pom.xml</code>.
      * 
      * @since 1.0.0

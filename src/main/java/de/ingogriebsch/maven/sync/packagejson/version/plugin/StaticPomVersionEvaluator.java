@@ -31,7 +31,7 @@ class StaticPomVersionEvaluator implements PomVersionEvaluator {
 
         String version = project.getVersion();
         if (version == null) {
-            logger.debug("Version of the projects pom not given, therefore falling back to the version of the parent...");
+            logger.debug("Version of the projects pom.xml is not given, therefore falling back to the version of the parent...");
             Project.Parent parent = project.getParent();
             version = parent != null ? parent.getVersion() : null;
         }

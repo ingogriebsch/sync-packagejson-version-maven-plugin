@@ -28,8 +28,8 @@ import lombok.SneakyThrows;
 import lombok.Value;
 
 /**
- * A component that checks if the version of the given <code>package.json</code> like file is valid (means is the same as the
- * given version).
+ * A component that checks if the version of the given <code>package.json</code> is valid (means is the same as the given
+ * version).
  * 
  * @since 1.0.0
  */
@@ -43,7 +43,7 @@ class VersionValidator {
     }
 
     /**
-     * Checks if the version of the given <code>package.json</code> like file is valid (means is the same as the given version).
+     * Checks if the version of the given <code>package.json</code> is valid (means is the same as the given version).
      * 
      * @param pomVersion the version of the <code>pom.xml</code>
      * @param packageJson the <code>package.json</code> that is validated.
@@ -52,13 +52,13 @@ class VersionValidator {
      * @since 1.0.0
      */
     Optional<ConstraintViolation> validate(String pomVersion, PackageJson packageJson) {
-        String packageJsonVersion = read(packageJson).getVersion();
-        logger.debug("Read version '%s' from package.json '%s'.", packageJsonVersion, packageJson);
+        String version = read(packageJson).getVersion();
+        logger.debug("Read version '%s' from '%s'.", version, packageJson);
 
-        if (!packageJsonVersion.equals(pomVersion)) {
-            logger.debug("Version '%s' of the package.json does not match against version '%s' of the pom.xml.",
-                packageJsonVersion, pomVersion);
-            return Optional.of(ConstraintViolation.of(packageJson.getName(), packageJsonVersion, pomVersion));
+        if (!version.equals(pomVersion)) {
+            String name = packageJson.getName();
+            logger.debug("Version '%s' of '%s' does not match against version '%s' of the pom.xml.", version, name, pomVersion);
+            return Optional.of(ConstraintViolation.of(name, version, pomVersion));
         }
         return Optional.empty();
     }
@@ -75,7 +75,7 @@ class VersionValidator {
     }
 
     /**
-     * A pojo that describes that the version of the <code>package.json</code> like file is not the same as the version of the
+     * A pojo that describes that the version of the <code>package.json</code> is not the same as the version of the
      * <code>pom.xml</code>.
      * 
      * @since 1.0.0

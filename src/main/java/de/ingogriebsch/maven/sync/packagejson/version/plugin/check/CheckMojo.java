@@ -48,8 +48,8 @@ class CheckMojo extends AbstractMojo {
     private static final String PROPERTY_PREFIX = "sync-packagejson-version.check.";
 
     /**
-     * The validator instance that should be used to validate if the version of the <code>package.json</code> like files match
-     * against the version of the pom.xml.
+     * The validator that is used to validate if the version of a <code>package.json</code> matches against the version of the
+     * <code>pom.xml</code>.
      * 
      * @since 1.2.0
      */
@@ -140,8 +140,8 @@ class CheckMojo extends AbstractMojo {
 
         boolean singlePackageJson = packageJsons.size() == 1;
         logger.info(format(
-            "Checking if the version of the %d found package.json file%s %s in sync with the version of the pom.xml [using '%s' evaluation]...",
-            packageJsons.size(), singlePackageJson ? "" : "s", singlePackageJson ? "is" : "are", pomVersionEvaluation));
+            "Checking if the version of the %d found package.json%s %s in sync with the version of the pom.xml [using '%s' evaluation]...",
+            packageJsons.size(), singlePackageJson ? "" : "'s", singlePackageJson ? "is" : "are", pomVersionEvaluation));
 
         File baseDir = project.getBasedir();
         String pomVersion = evaluatePomVersion(project);
@@ -157,8 +157,8 @@ class CheckMojo extends AbstractMojo {
 
             boolean singleViolation = violations.size() == 1;
             throw new MojoFailureException(
-                format("%d package.json file%s found in this project %s not in sync with the version of the pom.xml!",
-                    violations.size(), singleViolation ? "" : "s", singleViolation ? "is" : "are"));
+                format("%d package.json%s found in this project %s not in sync with the version of the pom.xml!",
+                    violations.size(), singleViolation ? "" : "'s", singleViolation ? "is" : "are"));
         }
 
         logger.info("Looks fine! :)");

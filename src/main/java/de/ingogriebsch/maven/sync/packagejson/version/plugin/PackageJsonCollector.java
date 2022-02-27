@@ -41,22 +41,22 @@ public class PackageJsonCollector {
     }
 
     /**
-     * Returns the list of <code>package.json</code> like files that are found based on the given includes and excludes.
+     * Returns the list of <code>package.json's</code> that are found based on the given includes and excludes.
      * 
      * @param baseDir the directory that is used as the root of the folder and file structure.
      * @param includes the optional includes that are used to evaluate which files should be included.
      * @param excludes the optional excludes that are used to evaluate which files should be included.
-     * @return the list of <code>package.json</code> like files that are found based on the given includes and excludes
+     * @return the list of <code>package.json's</code> that are found based on the given includes and excludes
      * @since 1.2.0
      */
     public List<File> collect(File baseDir, String[] includes, String[] excludes) {
         FileSet fileSet = prepareFileSet(baseDir, includes, excludes);
-        logger.debug("Using fileSet [%s] to collect the relevant files.", asString(fileSet));
+        logger.debug("Using fileSet [%s] to collect the relevant package.json's.", asString(fileSet));
 
         String[] fileNames = new FileSetManager().getIncludedFiles(fileSet);
         List<File> files = stream(fileNames).map(n -> new File(baseDir, n)).collect(toList());
 
-        logger.debug("Collected the following files %s.", files);
+        logger.debug("Collected the following package.json's: %s.", files);
         return files;
     }
 

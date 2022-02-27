@@ -31,7 +31,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Synchronizes the version of a <code>package.json</code> file with the version of the <code>pom.xml</code>.
+ * Synchronizes the version of a <code>package.json</code> with the version of the <code>pom.xml</code>.
  * 
  * @since 1.0.0
  */
@@ -42,7 +42,7 @@ class SyncMojo extends AbstractMojo {
     private static final String PROPERTY_PREFIX = "sync-packagejson-version.sync.";
 
     /**
-     * The writer that is used to write the version of the <code>package.json</code>.
+     * The writer that is used to write the version of a <code>package.json</code>.
      * 
      * @since 1.2.0
      */
@@ -107,13 +107,13 @@ class SyncMojo extends AbstractMojo {
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
         List<File> packageJsons = collectPackageJsons(includes, excludes);
         if (packageJsons.isEmpty()) {
-            throw new MojoFailureException("No package.json file found in this project!");
+            throw new MojoFailureException("No package.json found in this project!");
         }
 
         boolean singlePackageJson = packageJsons.size() == 1;
         logger.info(format(
-            "Synchronizing the version of the %d found package.json file%s with the version of the pom.xml [using '%s' evaluation]...",
-            packageJsons.size(), singlePackageJson ? "" : "s", pomVersionEvaluation));
+            "Synchronizing the version of the %d found package.json%s with the version of the pom.xml [using '%s' evaluation]...",
+            packageJsons.size(), singlePackageJson ? "" : "'s", pomVersionEvaluation));
 
         File baseDir = project.getBasedir();
         String pomVersion = evaluatePomVersion(project);

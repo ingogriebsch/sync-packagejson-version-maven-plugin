@@ -25,14 +25,14 @@ public class PomVersionEvaluatorFactory {
 
     public Optional<PomVersionEvaluator> create(String id) {
         PomVersionEvaluator evaluator = evaluators.get(id);
-        logger.debug("Created a pom-version-evaluator instance based on id '%s' [type: '%s].", id,
+        logger.debug("Created an evaluator instance based on id '%s' [type: '%s].", id,
             evaluator != null ? evaluator.getClass().getName() : null);
         return Optional.ofNullable(evaluator);
     }
 
     public Set<String> getIds() {
         Set<String> ids = unmodifiableSet(evaluators.keySet());
-        logger.debug("Returning ids %s to identify the available pom-version-evaluator instances.", ids);
+        logger.debug("Returning ids %s to identify the available evaluator instances.", ids);
         return ids;
     }
 
