@@ -96,14 +96,17 @@ public class Logger {
 
         @Override
         public void debug(CharSequence content) {
+            // nothing to do here
         }
 
         @Override
         public void debug(CharSequence content, Throwable error) {
+            // nothing to do here
         }
 
         @Override
         public void debug(Throwable error) {
+            // nothing to do here
         }
 
         @Override
@@ -113,14 +116,17 @@ public class Logger {
 
         @Override
         public void info(CharSequence content) {
+            // nothing to do here
         }
 
         @Override
         public void info(CharSequence content, Throwable error) {
+            // nothing to do here
         }
 
         @Override
         public void info(Throwable error) {
+            // nothing to do here
         }
 
         @Override
@@ -130,14 +136,17 @@ public class Logger {
 
         @Override
         public void warn(CharSequence content) {
+            // nothing to do here
         }
 
         @Override
         public void warn(CharSequence content, Throwable error) {
+            // nothing to do here
         }
 
         @Override
         public void warn(Throwable error) {
+            // nothing to do here
         }
 
         @Override
@@ -147,14 +156,17 @@ public class Logger {
 
         @Override
         public void error(CharSequence content) {
+            // nothing to do here
         }
 
         @Override
         public void error(CharSequence content, Throwable error) {
+            // nothing to do here
         }
 
         @Override
         public void error(Throwable error) {
+            // nothing to do here
         }
     }
 }
