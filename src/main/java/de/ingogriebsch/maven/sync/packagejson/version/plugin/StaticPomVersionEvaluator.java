@@ -36,7 +36,7 @@ class StaticPomVersionEvaluator implements PomVersionEvaluator {
             version = parent != null ? parent.getVersion() : null;
         }
 
-        logger.debug("Evaluated version '%s' [in a static way].", version);
+        logger.debug("Evaluated pom.xml version '%s' [in a static way].", version);
         return version;
     }
 

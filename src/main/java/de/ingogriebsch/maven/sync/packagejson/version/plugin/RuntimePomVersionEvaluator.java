@@ -19,7 +19,7 @@ class RuntimePomVersionEvaluator implements PomVersionEvaluator {
     @Override
     public String get(MavenProject mavenProject) {
         String version = mavenProject.getVersion();
-        logger.debug("Evaluated version '%s' [based on runtime information].", version);
+        logger.debug("Evaluated pom.xml version '%s' [based on runtime information].", version);
         return version;
     }
 }
