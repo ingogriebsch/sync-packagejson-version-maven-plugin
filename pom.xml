@@ -4,7 +4,7 @@
 
     <groupId>de.ingogriebsch.maven</groupId>
     <artifactId>sync-packagejson-version-maven-plugin</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>Sync package.json version Maven plugin</name>
