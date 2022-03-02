@@ -104,15 +104,14 @@ class SyncMojo extends AbstractMojo {
      */
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
+        logger.info(format(
+            "Synchronizing the version of the package.json's found in this project with the version of the pom.xml [using '%s' evaluation]...",
+            pomVersionEvaluation));
+
         List<PackageJson> packageJsons = collectPackageJsons(includes, excludes);
         if (packageJsons.isEmpty()) {
-            throw new MojoFailureException("No package.json found in this project!");
+            throw new MojoFailureException("No package.json's found in this project!");
         }
-
-        boolean singlePackageJson = packageJsons.size() == 1;
-        logger.info(format(
-            "Synchronizing the version of the %d found package.json%s with the version of the pom.xml [using '%s' evaluation]...",
-            packageJsons.size(), singlePackageJson ? "" : "'s", pomVersionEvaluation));
 
         String pomVersion = evaluatePomVersion(project);
         packageJsons //

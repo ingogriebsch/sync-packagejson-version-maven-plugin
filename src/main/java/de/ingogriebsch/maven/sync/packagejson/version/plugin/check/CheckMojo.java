@@ -127,20 +127,19 @@ class CheckMojo extends AbstractMojo {
      */
     @Override
     protected void doExecute() throws MojoExecutionException, MojoFailureException {
+        logger.info(format(
+            "Checking if the version of the package.json's found in this project are in sync with the version of the pom.xml [using '%s' evaluation]...",
+            pomVersionEvaluation));
+
         List<PackageJson> packageJsons = collectPackageJsons(includes, excludes);
         if (packageJsons.isEmpty()) {
-            String msg = "No package.json file found in this project!";
+            String msg = "No package.json's found in this project!";
             if (failIfNoneFound) {
                 throw new MojoFailureException(msg);
             }
             logger.warn(msg);
             return;
         }
-
-        boolean singlePackageJson = packageJsons.size() == 1;
-        logger.info(format(
-            "Checking if the version of the %d found package.json%s %s in sync with the version of the pom.xml [using '%s' evaluation]...",
-            packageJsons.size(), singlePackageJson ? "" : "'s", singlePackageJson ? "is" : "are", pomVersionEvaluation));
 
         String pomVersion = evaluatePomVersion(project);
         List<ConstraintViolation> violations = packageJsons //
