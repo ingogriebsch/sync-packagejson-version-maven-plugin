@@ -2,6 +2,7 @@ package de.ingogriebsch.maven.sync.packagejson.version.plugin;
 
 import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -27,7 +28,9 @@ class StaticPomVersionEvaluator implements PomVersionEvaluator {
     @Override
     @SneakyThrows(IOException.class)
     public String get(MavenProject mavenProject) {
-        Project project = xmlMapper.readValue(mavenProject.getFile(), Project.class);
+        File file = mavenProject.getFile();
+        logger.debug("Reading the version from pom file '%s'...", file.getAbsolutePath());
+        Project project = xmlMapper.readValue(file, Project.class);
 
         String version = project.getVersion();
         if (version == null) {
