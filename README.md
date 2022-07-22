@@ -17,6 +17,7 @@ Here you find the documentation for the latest releases and the current SNAPSHOT
 | Version | Reference documentation |
 | :---: | :---: |
 | SNAPSHOT | [Reference Doc.][sync-packagejson-version-maven-plugin-current-docs] |
+| 1.3.0 | [Reference Doc.][sync-packagejson-version-maven-plugin-1.3.0-docs] |
 | 1.2.0 | [Reference Doc.][sync-packagejson-version-maven-plugin-1.2.0-docs] |
 | 1.1.0 | [Reference Doc.][sync-packagejson-version-maven-plugin-1.1.0-docs] |
 | 1.0.0 | [Reference Doc.][sync-packagejson-version-maven-plugin-1.0.0-docs] |
@@ -26,6 +27,7 @@ This code is open source software licensed under the [Apache 2.0 License](https:
 
 [sync-packagejson-version-maven-plugin-current-docs]: https://ingogriebsch.github.io/sync-packagejson-version-maven-plugin/current/index.html
 [sync-packagejson-version-maven-plugin-current-docs-usage]: https://ingogriebsch.github.io/sync-packagejson-version-maven-plugin/current/index.html#usage
+[sync-packagejson-version-maven-plugin-1.3.0-docs]: https://ingogriebsch.github.io/sync-packagejson-version-maven-plugin/1.3.0/index.html
 [sync-packagejson-version-maven-plugin-1.2.0-docs]: https://ingogriebsch.github.io/sync-packagejson-version-maven-plugin/1.2.0/index.html
 [sync-packagejson-version-maven-plugin-1.1.0-docs]: https://ingogriebsch.github.io/sync-packagejson-version-maven-plugin/1.1.0/index.html
 [sync-packagejson-version-maven-plugin-1.0.0-docs]: https://ingogriebsch.github.io/sync-packagejson-version-maven-plugin/1.0.0/index.html
