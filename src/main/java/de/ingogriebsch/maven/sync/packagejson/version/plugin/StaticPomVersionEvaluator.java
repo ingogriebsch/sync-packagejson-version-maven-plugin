@@ -28,18 +28,18 @@ class StaticPomVersionEvaluator implements PomVersionEvaluator {
     @Override
     @SneakyThrows(IOException.class)
     public String get(MavenProject mavenProject) {
-        File file = mavenProject.getFile();
+        File file = new File(mavenProject.getBasedir(), "pom.xml");
         logger.debug("Reading the version from pom file '%s'...", file.getAbsolutePath());
         Project project = xmlMapper.readValue(file, Project.class);
 
         String version = project.getVersion();
         if (version == null) {
-            logger.debug("Version of the projects pom.xml is not given, therefore falling back to the version of the parent...");
+            logger.debug("Version of the projects pom file is not given, therefore falling back to the version of the parent...");
             Project.Parent parent = project.getParent();
             version = parent != null ? parent.getVersion() : null;
         }
 
-        logger.debug("Evaluated pom.xml version '%s' [in a static way].", version);
+        logger.debug("Evaluated pom file version '%s' [in a static way].", version);
         return version;
     }
 
