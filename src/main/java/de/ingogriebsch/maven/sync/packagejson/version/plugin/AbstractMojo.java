@@ -19,6 +19,7 @@ import static java.lang.String.format;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import de.ingogriebsch.maven.sync.packagejson.version.plugin.PackageJsonCollector.Params;
@@ -33,7 +34,7 @@ import org.apache.maven.project.MavenProject;
  * <p>
  * This class also handles some general cases like skipping the execution and checking if the packaging is supported. It also
  * provides some helper methods to ease the implementation of specific cases.
- * 
+ *
  * @since 1.0.0
  */
 /**
@@ -44,28 +45,28 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
 
     /**
      * The factory instance that should be used to evaluate the version of the pom.xml.
-     * 
+     *
      * @since 1.0.0
      */
     private final PomVersionEvaluatorFactory pomVersionEvaluationFactory;
 
     /**
      * The collector that is used to collect the relevant <code>package.json's</code>.
-     * 
+     *
      * @since 1.2.0
      */
     private final PackageJsonCollector packageJsonCollector;
 
     /**
      * A logger that should be used instead of the log instance that is provided through Maven.
-     * 
+     *
      * @since 1.0.0
      */
     protected final Logger logger;
 
     /**
      * The Maven project the mojo is executed on.
-     * 
+     *
      * @since 1.0.0
      */
     @Parameter(defaultValue = "${project}", readonly = true)
@@ -75,7 +76,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
      * The default constructor which is responsible for initializing common members.
      * <p>
      * Needs to be called by the classes that extend this class.
-     * 
+     *
      * @since 1.0.0
      */
     protected AbstractMojo() {
@@ -117,7 +118,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
 
     /**
      * Explains if the execution of the mojo should be skipped or not!
-     * 
+     *
      * @return {@code true} if the execution of the mojo should be skipped, otherwise {@code false}
      * @since 1.0.0
      */
@@ -128,7 +129,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
      * <p>
      * Needs to be implemented by the mojo that extends this abstract and will be executed if all previous checks do not hinder
      * this method to be executed.
-     * 
+     *
      * @throws MojoFailureException if the execution of the mojo fails.
      * @throws MojoExecutionException if the execution of the mojo breaks.
      * @since 1.0.0
@@ -137,7 +138,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
 
     /**
      * Returns the 'pomVersionEvaluation' property configured on the concrete mojo
-     * 
+     *
      * @return the 'pomVersionEvaluation' property configured on the concrete mojo.
      * @since 1.1.0
      */
@@ -145,7 +146,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
 
     /**
      * Allows the mojo to validate whatever is necessary to get validated before executing the mojo.
-     * 
+     *
      * @throws Exception if the validation is not successful.
      * @since 1.0.0
      */
@@ -162,7 +163,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
 
     /**
      * Explains if the packaging of the project the mojo is running on is supported by the mojo.
-     * 
+     *
      * @param packaging the packaging of the project the mojo is running on
      * @return {@code true} if the packaging of the project is supported by the mojo, otherwise {@code false}
      * @since 1.0.0
@@ -173,18 +174,18 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
 
     /**
      * Evaluates the version of the pom.xml based on the configuration made on the concrete mojo.
-     * 
+     *
      * @param mavenProject the Maven project to be evaluated.
      * @return the evaluated version from the pom.xml
      * @since 1.1.0
      */
     protected String evaluatePomVersion(MavenProject mavenProject) {
-        return pomVersionEvaluationFactory.create(getPomVersionEvaluation()).map(p -> p.get(project)).orElseThrow();
+        return pomVersionEvaluationFactory.create(getPomVersionEvaluation()).map(p -> p.get(project)).orElseThrow(() -> new NoSuchElementException("No value present"));
     }
 
     /**
      * Collects the <code>package.json's</code> which should be respected during the execution of the mojo.
-     * 
+     *
      * @param includes the optional includes that are used to evaluate which files should be included.
      * @param excludes the optional excludes that are used to evaluate which files should be included.
      * @return the list of <code>package.json's</code> that are found.
